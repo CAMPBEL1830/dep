@@ -1,0 +1,70 @@
+import os
+import shutil
+import time
+from datetime import datetime, timedelta
+
+# Répertoires source et destination
+source_dir = r'C:\Users\HP\Pictures\Saved Pictures'
+destination_dir = r'C:\Users\HP\Desktop\TP'
+
+# Heures de début et de fin pour vérifier les fichiers
+start_time = 8  # 3h du matin
+end_time = 15   # 10h du matin
+
+def get_latest_pdf_file(directory):
+    # Liste tous les fichiers dans le répertoire
+    files = [f for f in os.listdir(directory) if f.endswith('.pdf')]
+    
+    # Si aucun fichier n'est trouvé, retourner None
+    if not files:
+        return None
+    
+    # Récupérer la date actuelle
+    today = datetime.today().date()
+    
+    # Filtrer les fichiers pour ceux modifiés aujourd'hui
+    todays_files = []
+    for file in files:
+        file_path = os.path.join(directory, file)
+        file_mod_time = datetime.fromtimestamp(os.path.getmtime(file_path)).date()
+        if file_mod_time == today:
+            todays_files.append(file)
+    
+    # Si aucun fichier d'aujourd'hui n'est trouvé, retourner None
+    if not todays_files:
+        return None
+    
+    # Récupérer le fichier le plus récent parmi ceux d'aujourd'hui
+    latest_file = max(todays_files, key=lambda f: os.path.getmtime(os.path.join(directory, f)))
+    return os.path.join(directory, latest_file)
+
+def move_latest_pdf_file():
+    while True:
+        # Obtenir l'heure actuelle
+        now = datetime.now()
+        current_hour = now.hour
+
+        # Vérifier si l'heure actuelle est entre 3h et 10h du matin
+        if start_time <= current_hour < end_time:
+            # Récupérer le fichier PDF le plus récent du jour
+            latest_file = get_latest_pdf_file(source_dir)
+            
+            if latest_file:
+                # Nom de base du fichier
+                file_name = os.path.basename(latest_file)
+                
+                # Chemin complet de destination
+                dest_file = os.path.join(destination_dir, file_name)
+                
+                # Déplacer le fichier vers le dossier de destination
+                shutil.copy(latest_file, dest_file)
+                print(f"Le fichier {file_name} a été déplacé vers {destination_dir}")
+                
+            else:
+                print("Aucun fichier PDF d'aujourd'hui trouvé.")
+        
+        # Attendre 10 minutes avant de vérifier à nouveau
+        time.sleep(10)
+
+# Lancer la fonction pour surveiller et déplacer les fichiers
+move_latest_pdf_file()
