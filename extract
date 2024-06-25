@@ -1,0 +1,86 @@
+# Initialisation du dictionnaire
+transaction_data = {
+    'PAN': [],
+    'RRN': [],
+    'CODE AUTO': [],
+    'MONTANT': [],
+    'MONTANT REGLEMENT EN EURO': [],
+    'SENS ECRITURE': [],
+    'DATE TRANSACTION': [],
+    'HEURE': [],
+    'TERMINAL ID': [],
+    'ACTION CODE': [],
+    'MONTANT INTERCHANGE': [],
+    'SENS INTERCHANGE': []
+}
+
+L = []
+with open("file", "r") as file:
+    for line in file:
+        L.append(line.strip())
+
+for elem in L:
+    transaction_data['PAN'].append(elem[0:18].strip())  # Indices à ajuster selon votre format
+    transaction_data['RRN'].append(elem[18:30].strip())  # Exemple d'ajustement
+    transaction_data['CODE AUTO'].append(elem[30:36].strip())
+    transaction_data['MONTANT'].append(elem[36:48].strip())
+    transaction_data['MONTANT REGLEMENT EN EURO'].append(elem[48:60].strip())
+    transaction_data['SENS ECRITURE'].append(elem[60:62].strip())
+    transaction_data['DATE TRANSACTION'].append(elem[62:70].strip())
+    transaction_data['HEURE'].append(elem[70:76].strip())
+    transaction_data['TERMINAL ID'].append(elem[76:88].strip())
+    transaction_data['ACTION CODE'].append(elem[88:94].strip())
+    transaction_data['MONTANT INTERCHANGE'].append(elem[94:106].strip())
+    transaction_data['SENS INTERCHANGE'].append(elem[106:108].strip())
+
+# Affichage du dictionnaire pour vérifier
+print(transaction_data)
+
+
+"""
+import pandas as pd
+
+# Initialisation du dictionnaire
+transaction_data = {
+    'PAN': [],
+    'RRN': [],
+    'CODE AUTO': [],
+    'MONTANT': [],
+    'MONTANT REGLEMENT EN EURO': [],
+    'SENS ECRITURE': [],
+    'DATE TRANSACTION': [],
+    'HEURE': [],
+    'TERMINAL ID': [],
+    'ACTION CODE': [],
+    'MONTANT INTERCHANGE': [],
+    'SENS INTERCHANGE': []
+}
+
+L = []
+with open("file", "r") as file:
+    for line in file:
+        L.append(line.strip())
+
+for elem in L:
+    transaction_data['PAN'].append(elem[0:18].strip())  # Indices à ajuster selon votre format
+    transaction_data['RRN'].append(elem[18:30].strip())  # Exemple d'ajustement
+    transaction_data['CODE AUTO'].append(elem[30:36].strip())
+    transaction_data['MONTANT'].append(elem[36:48].strip())
+    transaction_data['MONTANT REGLEMENT EN EURO'].append(elem[48:60].strip())
+    transaction_data['SENS ECRITURE'].append(elem[60:62].strip())
+    transaction_data['DATE TRANSACTION'].append(elem[62:70].strip())
+    transaction_data['HEURE'].append(elem[70:76].strip())
+    transaction_data['TERMINAL ID'].append(elem[76:88].strip())
+    transaction_data['ACTION CODE'].append(elem[88:94].strip())
+    transaction_data['MONTANT INTERCHANGE'].append(elem[94:106].strip())
+    transaction_data['SENS INTERCHANGE'].append(elem[106:108].strip())
+
+# Création d'un DataFrame à partir du dictionnaire
+df = pd.DataFrame(transaction_data)
+
+# Enregistrement du DataFrame dans un fichier Excel
+df.to_excel("transaction_data.xlsx", index=False)
+
+print("Données enregistrées dans 'transaction_data.xlsx'")
+
+"""
