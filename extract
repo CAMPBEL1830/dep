@@ -35,3 +35,66 @@ for elem in L:
     
 # Affichage du dictionnaire pour vérifier
 print(transaction_data)
+
+
+
+
+
+
+
+
+
+
+
+
+
+import pandas as pd
+
+# Initialisation du dictionnaire
+transaction_data = {
+    'PAN': [],
+    'RRN': [],
+    'CODE AUTO': [],
+    'MONTANT': [],
+    'MONTANT REGLEMENT EN EURO': [],
+    'SENS ECRITURE': [],
+    'DATE TRANSACTION': [],
+    'HEURE': [],
+    'TERMINAL ID': [],
+    'ACTION CODE': [],
+    'MONTANT INTERCHANGE': [],
+    #'SENS INTERCHANGE': []
+}
+
+# Fonction pour formater les heures
+def format_time(time_str):
+    return ':'.join(time_str[i:i+2] for i in range(0, len(time_str), 2))
+
+L = []
+with open(r"S:\DATA OFFICE\SILUE CAMPBEL\Nouveau dossier\MCI.AR.T464.M.E0033500.D240623.T020033.A029") as file:
+    for line in file:
+        L.append(line.strip())
+
+for elem in L:
+    transaction_data['PAN'].append(elem[32:51].strip())  
+    transaction_data['RRN'].append(elem[70:82].strip())  
+    transaction_data['CODE AUTO'].append(elem[118:124].strip())
+    transaction_data['MONTANT'].append(elem[128:140].strip())
+    transaction_data['MONTANT REGLEMENT EN EURO'].append(elem[175:187].strip())
+    transaction_data['SENS ECRITURE'].append(elem[140:141].strip())
+    transaction_data['DATE TRANSACTION'].append(elem[18:24].strip())
+    transaction_data['HEURE'].append(format_time(elem[24:30].strip()))
+    transaction_data['TERMINAL ID'].append(elem[92:102].strip())
+    transaction_data['ACTION CODE'].append(elem[102:104].strip())
+    transaction_data['MONTANT INTERCHANGE'].append(elem[188:198].strip())
+    #transaction_data['SENS INTERCHANGE'].append(elem[106:109].strip())
+
+# Conversion du dictionnaire en DataFrame
+df = pd.DataFrame(transaction_data)
+
+# Affichage du DataFrame pour vérifier
+print(df)
+
+# Sauvegarde du DataFrame dans un fichier Excel
+df.to_excel('output.xlsx', index=False)
+
