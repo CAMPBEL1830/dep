@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 import shutil
-
+,
 # Définition des répertoires
 source_dir = 'path_to_source_directory'  # Répertoire source où les fichiers .txt sont initialement placés
 input_dir = 'path_to_input_directory'    # Répertoire d'entrée
