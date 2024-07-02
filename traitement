@@ -1,0 +1,89 @@
+import pandas as pd
+import os
+import shutil
+
+# Définition des répertoires
+source_dir = 'path_to_source_directory'  # Répertoire source où les fichiers .txt sont initialement placés
+input_dir = 'path_to_input_directory'    # Répertoire d'entrée
+output_dir = 'path_to_output_directory'  # Répertoire de sortie
+
+# Fonction pour formater les heures
+def format_time(time_str):
+    return ':'.join(time_str[i:i+2] for i in range(0, len(time_str), 2))
+
+# Fonction pour formater la date au format AAAAMMJJ
+def format_date(date_str):
+    month = date_str[:2]
+    day = date_str[2:4]
+    year = date_str[4:]
+    return f"{year}{month}{day}"
+
+# Fonction pour masquer les chiffres dans PAN
+def mask_pan(pan):
+    return pan[:6] + '********' + pan[14:]
+
+# Initialisation du dictionnaire
+transaction_data = {
+    'PAN': [],
+    'RRN': [],
+    'CODE AUTO': [],
+    'MONTANT': [],
+    'MONTANT REGLEMENT EN EURO': [],
+    'SENS ECRITURE': [],
+    'DATE TRANSACTION': [],
+    'HEURE': [],
+    'TERMINAL ID': [],
+    'ACTION CODE': [],
+    'MONTANT INTERCHANGE': [],
+    'SENS INTERCHANGE': [],  # Colonne ajoutée
+    'DATE': []  # Nouvelle colonne DATE
+}
+
+# Déplacer les fichiers .txt du répertoire source vers le répertoire d'entrée
+for filename in os.listdir(source_dir):
+    if filename.endswith('.txt'):
+        shutil.move(os.path.join(source_dir, filename), os.path.join(input_dir, filename))
+
+# Parcourir les fichiers dans le répertoire d'entrée
+for filename in os.listdir(input_dir):
+    if filename.endswith('.txt'):  # Filtrer les fichiers texte
+        file_path = os.path.join(input_dir, filename)
+        
+        L = []
+        with open(file_path, 'r') as file:
+            for line in file:
+                L.append(line.strip())
+        
+        # Récupérer la date de la première ligne pour la nouvelle colonne DATE
+        date_value = L[0][6:12] if L else ""
+
+        for elem in L:
+            pan = elem[32:51].strip()
+            transaction_data['PAN'].append(mask_pan(pan))  # Masque les chiffres dans PAN
+            transaction_data['RRN'].append(elem[70:82].strip())  
+            transaction_data['CODE AUTO'].append(elem[118:124].strip())
+            transaction_data['MONTANT'].append(elem[128:140].strip())
+            transaction_data['MONTANT REGLEMENT EN EURO'].append(elem[175:187].strip())
+            transaction_data['SENS ECRITURE'].append(elem[140:141].strip())
+            transaction_data['DATE TRANSACTION'].append(format_date(elem[18:24].strip()))
+            transaction_data['HEURE'].append(format_time(elem[24:30].strip()))
+            transaction_data['TERMINAL ID'].append(elem[92:102].strip())
+            transaction_data['ACTION CODE'].append(elem[102:104].strip())
+            transaction_data['MONTANT INTERCHANGE'].append(elem[188:198].strip())
+            transaction_data['SENS INTERCHANGE'].append("")  # Ajoute une valeur vide pour chaque entrée
+            transaction_data['DATE'].append(date_value)  # Applique la valeur de date_value à chaque ligne
+
+        # Conversion du dictionnaire en DataFrame
+        df = pd.DataFrame(transaction_data)
+        
+        # Sauvegarde du DataFrame dans un fichier Excel
+        output_file_path = os.path.join(output_dir, f"{os.path.splitext(filename)[0]}.xlsx")
+        df.to_excel(output_file_path, index=False)
+        
+        # Suppression du fichier texte traité
+        os.remove(file_path)
+        
+        # Réinitialisation du dictionnaire pour le fichier suivant
+        transaction_data = {key: [] for key in transaction_data}
+
+print("Traitement terminé.")
