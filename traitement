@@ -1,9 +1,9 @@
 import pandas as pd
 import os
 import shutil
-,
+
 # Définition des répertoires
-source_dir = 'path_to_source_directory'  # Répertoire source où les fichiers .txt sont initialement placés
+source_dir = 'path_to_source_directory'  # Répertoire source où les fichiers sont ajoutés
 input_dir = 'path_to_input_directory'    # Répertoire d'entrée
 output_dir = 'path_to_output_directory'  # Répertoire de sortie
 
@@ -39,16 +39,17 @@ transaction_data = {
     'DATE': []  # Nouvelle colonne DATE
 }
 
-# Déplacer les fichiers .txt du répertoire source vers le répertoire d'entrée
-for filename in os.listdir(source_dir):
-    if filename.endswith('.txt'):
-        shutil.move(os.path.join(source_dir, filename), os.path.join(input_dir, filename))
+# Trouver le dernier fichier ajouté à source_dir
+latest_file = max([os.path.join(source_dir, f) for f in os.listdir(source_dir)], key=os.path.getmtime)
+
+# Déplacer le dernier fichier ajouté vers le répertoire d'entrée
+if latest_file:
+    shutil.move(latest_file, os.path.join(input_dir, os.path.basename(latest_file)))
 
 # Parcourir les fichiers dans le répertoire d'entrée
 for filename in os.listdir(input_dir):
-    if filename.endswith('.txt'):  # Filtrer les fichiers texte
-        file_path = os.path.join(input_dir, filename)
-        
+    file_path = os.path.join(input_dir, filename)
+    if os.path.isfile(file_path):  # Vérifier que c'est un fichier
         L = []
         with open(file_path, 'r') as file:
             for line in file:
