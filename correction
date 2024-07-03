@@ -22,6 +22,13 @@ def format_date(date_str):
 def mask_pan(pan):
     return pan[:6] + '********' + pan[14:]
 
+# Fonction pour convertir une chaîne de caractères en entier
+def to_int(value):
+    try:
+        return int(value)
+    except ValueError:
+        return None
+
 # Initialisation du dictionnaire
 transaction_data = {
     'PAN': [],
@@ -63,8 +70,8 @@ for filename in os.listdir(input_dir):
             transaction_data['PAN'].append(mask_pan(pan))  # Masque les chiffres dans PAN
             transaction_data['RRN'].append(elem[70:82].strip())  
             transaction_data['CODE AUTO'].append(elem[118:124].strip())
-            transaction_data['MONTANT'].append(elem[128:140].strip())
-            transaction_data['MONTANT REGLEMENT EN EURO'].append(elem[175:187].strip())
+            transaction_data['MONTANT'].append(to_int(elem[128:140].strip()))
+            transaction_data['MONTANT REGLEMENT EN EURO'].append(to_int(elem[175:187].strip()))
             transaction_data['SENS ECRITURE'].append(elem[140:141].strip())
             transaction_data['DATE TRANSACTION'].append(format_date(elem[18:24].strip()))
             transaction_data['HEURE'].append(format_time(elem[24:30].strip()))
