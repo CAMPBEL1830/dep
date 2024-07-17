@@ -1,0 +1,11 @@
+import pandas as pd
+
+# Charger le fichier Excel
+df = pd.read_excel('chemin_vers_ton_fichier.xlsx')
+df['Date'] = pd.to_datetime(df['Date'])
+# Grouper par ID et année, puis agréger
+df_grouped = df.groupby(['ID', df['Date'].dt.year]).agg(
+    Montant_total=('Montant', 'sum'),
+    Nombre_dettes=('Montant', 'size')
+).reset_index()
+print(df_grouped)
