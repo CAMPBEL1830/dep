@@ -9,3 +9,30 @@ df_grouped = df.groupby(['ID', df['Date'].dt.year]).agg(
     Nombre_dettes=('Montant', 'size')
 ).reset_index()
 print(df_grouped)
+
+
+
+
+ nouveauv
+
+import pandas as pd
+
+# Chargement du fichier Excel
+file_path = 'votre_fichier.xlsx'
+df = pd.read_excel(file_path)
+
+# Assurez-vous que les colonnes ont les bons noms
+# Par exemple : 'ClientID', 'Année', 'Dette'
+
+# Regrouper par ID client et année
+grouped = df.groupby(['ClientID', 'Année']).agg(
+    somme_dettes=('Dette', 'sum'),
+    nombre_dettes=('Dette', 'count')
+).reset_index()
+
+# Afficher le résultat
+print(grouped)
+
+# Si vous souhaitez enregistrer le résultat dans un nouveau fichier Excel
+output_file_path = 'résultat_groupé.xlsx'
+grouped.to_excel(output_file_path, index=False)
