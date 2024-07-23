@@ -1,0 +1,67 @@
+import pandas as pd
+
+def create_data_dictionary():
+    data_dictionary = {
+        "num_dossier": [],
+        "date_realisation": [],
+        "date_accord": [],
+        "code_siege_racine": [],
+        "code_categorie_dossier": [],
+        "duree_restante_mois": [],
+        "date_fin_reelle": [],
+        "constante_remboursement_en_cours": [],
+        "duree_dossier": [],
+        "montant_minimal_dossier": [],
+        "date_premiere_echeance": [],
+        "date_fin_previsionnelle": [],
+        "capitale_amortie_derniere_echeance": [],
+        "capitale_amortie_fin_palier": [],
+        "capitale_amortie_en_echeance": [],
+        "capitale_amortie_avant_dernier_echeance": [],
+        "somme_totale_restant_due": []
+    }
+    return data_dictionary
+
+def extract_elements(file_path):
+    data_dictionary = create_data_dictionary()
+
+    with open(file_path, 'r', encoding='utf-8') as file:
+        lines = file.readlines()
+
+    for line in lines[2:]:
+        columns = line.split()
+        columns = [col.strip() for col in columns]
+
+        data_dictionary["num_dossier"].append(columns[0:10])
+        data_dictionary["date_realisation"].append(columns[17:28])
+        data_dictionary["date_accord"].append(columns[28:39])
+        data_dictionary["code_siege_racine"].append(columns[39:45])
+        data_dictionary["code_categorie_dossier"].append(columns[45:52])
+        data_dictionary["duree_restante_mois"].append(columns[52:62])
+        data_dictionary["date_fin_reelle"].append(columns[62:64])
+        data_dictionary["constante_remboursement_en_cours"].append(columns[66:77])
+        data_dictionary["duree_dossier"].append(columns[76:79])
+        data_dictionary["montant_minimal_dossier"].append(columns[73:84])
+        data_dictionary["date_premiere_echeance"].append(columns[87:99])
+        data_dictionary["date_fin_previsionnelle"].append(columns[98:110])
+        data_dictionary["capitale_amortie_derniere_echeance"].append(columns[109:112])
+        data_dictionary["capitale_amortie_fin_palier"].append(columns[111:113])
+        data_dictionary["capitale_amortie_en_echeance"].append(columns[113:115])
+        data_dictionary["capitale_amortie_avant_dernier_echeance"].append(columns[115:117])
+        data_dictionary["somme_totale_restant_due"].append(columns[117:125])
+
+    return data_dictionary
+
+def save_to_excel(data_dictionary, excel_path):
+    # Convertir le dictionnaire en DataFrame
+    df = pd.DataFrame({key: pd.Series(value) for key, value in data_dictionary.items()})
+    # Sauvegarder le DataFrame dans un fichier Excel
+    df.to_excel(excel_path, index=False)
+
+# Exemple d'utilisation
+file_path = 'votre_fichier.txt'
+excel_path = 'output.xlsx'
+data_dictionary = extract_elements(file_path)
+save_to_excel(data_dictionary, excel_path)
+
+print(f"Données enregistrées dans {excel_path}")
