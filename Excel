@@ -128,3 +128,22 @@ unique_ids_df = pd.DataFrame(unique_ids, columns=['ID'])
 unique_ids_df.to_excel('unique_ids.xlsx', index=False)
 
 print("Les éléments uniques ont été enregistrés dans 'unique_ids.xlsx'.")
+
+
+
+
+code 7 
+
+import pandas as pd
+
+# Charger le fichier Excel
+file_path = 'votre_fichier.xlsx'
+df = pd.read_excel(file_path)
+
+# Associer chaque ID à son année d'octroi
+id_years = df[['ID', 'Année_octroi']].drop_duplicates()
+
+# Enregistrer les résultats dans un nouveau fichier Excel
+id_years.to_excel('id_with_year.xlsx', index=False)
+
+print("Les résultats ont été enregistrés dans 'id_with_year.xlsx'.")
