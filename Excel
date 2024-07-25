@@ -62,3 +62,27 @@ result.rename(columns={'SOMME_DUES': 'Total SOMME_DUES'}, inplace=True)
 result.to_excel('id_somme_dues_total.xlsx', index=False)
 
 print("Les résultats ont été enregistrés dans 'id_somme_dues_total.xlsx'.")
+
+
+
+
+
+
+code 4 
+
+import pandas as pd
+
+# Charger le fichier Excel
+file_path = 'votre_fichier.xlsx'
+df = pd.read_excel(file_path)
+
+# Regrouper les données par groupe et année d'octroi
+result = df.groupby(['Groupe', 'Année_octroi']).agg(
+    Nombre_de_crédits=('Numero_dossier', 'count'),
+    Nombre_ID_uniques=('ID', 'nunique')
+).reset_index()
+
+# Enregistrer les résultats dans un nouveau fichier Excel
+result.to_excel('grouped_by_date_and_group.xlsx', index=False)
+
+print("Les résultats ont été enregistrés dans 'grouped_by_date_and_group.xlsx'.")
