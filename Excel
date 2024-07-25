@@ -86,3 +86,26 @@ result = df.groupby(['Groupe', 'Année_octroi']).agg(
 result.to_excel('grouped_by_date_and_group.xlsx', index=False)
 
 print("Les résultats ont été enregistrés dans 'grouped_by_date_and_group.xlsx'.")
+
+
+
+cide 5 
+
+
+
+import pandas as pd
+
+# Charger le fichier Excel
+file_path = 'votre_fichier.xlsx'
+df = pd.read_excel(file_path)
+
+# Calculer le nombre d'ID uniques par groupe et année d'octroi
+result = df.groupby(['Groupe', 'Année_octroi'])['ID'].nunique().reset_index()
+
+# Renommer la colonne de comptage
+result.rename(columns={'ID': 'Nombre_ID_uniques'}, inplace=True)
+
+# Enregistrer les résultats dans un nouveau fichier Excel
+result.to_excel('unique_id_by_year_and_group.xlsx', index=False)
+
+print("Les résultats ont été enregistrés dans 'unique_id_by_year_and_group.xlsx'.")
