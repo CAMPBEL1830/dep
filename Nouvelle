@@ -93,3 +93,32 @@ age_stats.rename(columns={'mean': 'Âge moyen', 'min': 'Âge min', 'max': 'Âge 
 age_stats.to_excel('age_statistics_by_group.xlsx', index=False)
 
 print("Les résultats ont été enregistrés dans 'age_statistics_by_group.xlsx'.")
+
+
+
+
+
+
+code 2222222
+
+
+import pandas as pd
+
+# Charger le fichier Excel
+file_path = 'votre_fichier.xlsx'
+df = pd.read_excel(file_path)
+
+# Convertir la colonne 'Âge' en numérique et ignorer les valeurs non convertibles et les zéros
+df['Âge'] = pd.to_numeric(df['Âge'], errors='coerce')
+df = df[df['Âge'] != 0]
+
+# Calculer l'âge moyen, minimum et maximum par groupe
+age_stats = df.groupby('Groupe')['Âge'].agg(['mean', 'min', 'max']).reset_index()
+
+# Renommer les colonnes
+age_stats.rename(columns={'mean': 'Âge moyen', 'min': 'Âge min', 'max': 'Âge max'}, inplace=True)
+
+# Enregistrer les résultats dans un nouveau fichier Excel
+age_stats.to_excel('age_statistics_by_group.xlsx', index=False)
+
+print("Les résultats ont été enregistrés dans 'age_statistics_by_group.xlsx'.")
