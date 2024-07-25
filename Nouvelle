@@ -1,0 +1,13 @@
+import pandas as pd
+
+# Charger le fichier Excel
+file_path = 'votre_fichier.xlsx'
+df = pd.read_excel(file_path)
+
+# Associer chaque ID à son année d'octroi et groupe
+id_info = df[['ID', 'Année_octroi', 'Groupe']].drop_duplicates()
+
+# Enregistrer les résultats dans un nouveau fichier Excel
+id_info.to_excel('id_with_year_and_group.xlsx', index=False)
+
+print("Les résultats ont été enregistrés dans 'id_with_year_and_group.xlsx'.")
