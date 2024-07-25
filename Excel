@@ -36,3 +36,29 @@ result.rename(columns={'Numero_dossier': 'Nombre de Numero_dossier'}, inplace=Tr
 result.to_excel('id_numero_dossier_count.xlsx', index=False)
 
 print("Les résultats ont été enregistrés dans 'id_numero_dossier_count.xlsx'.")
+
+
+
+
+
+
+
+code 3 
+
+
+import pandas as pd
+
+# Charger le fichier Excel
+file_path = 'votre_fichier.xlsx'
+df = pd.read_excel(file_path)
+
+# Calculer la somme de SOMME_DUES pour chaque ID
+result = df.groupby('ID')['SOMME_DUES'].sum().reset_index()
+
+# Renommer la colonne de somme
+result.rename(columns={'SOMME_DUES': 'Total SOMME_DUES'}, inplace=True)
+
+# Enregistrer les résultats dans un nouveau fichier Excel
+result.to_excel('id_somme_dues_total.xlsx', index=False)
+
+print("Les résultats ont été enregistrés dans 'id_somme_dues_total.xlsx'.")
