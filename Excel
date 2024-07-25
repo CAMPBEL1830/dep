@@ -14,3 +14,25 @@ result.rename(columns={'ID': 'Nombre d\'ID uniques'}, inplace=True)
 result.to_excel('grouped_segments.xlsx', index=False)
 
 print("Les résultats ont été enregistrés dans 'grouped_segments.xlsx'.")
+
+
+
+
+nouveau cauee 
+
+import pandas as pd
+
+# Charger le fichier Excel
+file_path = 'votre_fichier.xlsx'
+df = pd.read_excel(file_path)
+
+# Compter le nombre de Numero_dossier pour chaque ID
+result = df.groupby('ID')['Numero_dossier'].nunique().reset_index()
+
+# Renommer la colonne de comptage
+result.rename(columns={'Numero_dossier': 'Nombre de Numero_dossier'}, inplace=True)
+
+# Enregistrer les résultats dans un nouveau fichier Excel
+result.to_excel('id_numero_dossier_count.xlsx', index=False)
+
+print("Les résultats ont été enregistrés dans 'id_numero_dossier_count.xlsx'.")
