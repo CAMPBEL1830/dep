@@ -68,3 +68,28 @@ id_sum = id_grouped.groupby(['ID', 'Année_octroi']).agg(
 id_sum.to_excel('id_representative_with_details.xlsx', index=False)
 
 print("Les résultats ont été enregistrés dans 'id_representative_with_details.xlsx'.")
+
+
+
+
+code 1111
+
+import pandas as pd
+
+# Charger le fichier Excel
+file_path = 'votre_fichier.xlsx'
+df = pd.read_excel(file_path)
+
+# Convertir la colonne 'Âge' en numérique et ignorer les valeurs non convertibles
+df['Âge'] = pd.to_numeric(df['Âge'], errors='coerce')
+
+# Calculer l'âge moyen, minimum et maximum par groupe
+age_stats = df.groupby('Groupe')['Âge'].agg(['mean', 'min', 'max']).reset_index()
+
+# Renommer les colonnes
+age_stats.rename(columns={'mean': 'Âge moyen', 'min': 'Âge min', 'max': 'Âge max'}, inplace=True)
+
+# Enregistrer les résultats dans un nouveau fichier Excel
+age_stats.to_excel('age_statistics_by_group.xlsx', index=False)
+
+print("Les résultats ont été enregistrés dans 'age_statistics_by_group.xlsx'.")
