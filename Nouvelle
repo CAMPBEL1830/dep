@@ -122,3 +122,27 @@ age_stats.rename(columns={'mean': 'Âge moyen', 'min': 'Âge min', 'max': 'Âge 
 age_stats.to_excel('age_statistics_by_group.xlsx', index=False)
 
 print("Les résultats ont été enregistrés dans 'age_statistics_by_group.xlsx'.")
+
+
+code 8888888
+
+
+import pandas as pd
+
+# Charger le fichier Excel
+file_path = 'votre_fichier.xlsx'
+df = pd.read_excel(file_path)
+
+# Convertir la colonne 'Durée_solve' en numérique et ignorer les valeurs non convertibles
+df['Durée_solve'] = pd.to_numeric(df['Durée_solve'], errors='coerce')
+
+# Calculer la durée moyenne par groupe et année d'octroi
+group_stats = df.groupby(['Groupe', 'Année_octroi'])['Durée_solve'].mean().reset_index()
+
+# Renommer la colonne de moyenne
+group_stats.rename(columns={'Durée_solve': 'Durée_solve_moyenne'}, inplace=True)
+
+# Enregistrer les résultats dans un nouveau fichier Excel
+group_stats.to_excel('group_stats_with_year_and_duration.xlsx', index=False)
+
+print("Les résultats ont été enregistrés dans 'group_stats_with_year_and_duration.xlsx'.")
