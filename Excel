@@ -109,3 +109,22 @@ result.rename(columns={'ID': 'Nombre_ID_uniques'}, inplace=True)
 result.to_excel('unique_id_by_year_and_group.xlsx', index=False)
 
 print("Les résultats ont été enregistrés dans 'unique_id_by_year_and_group.xlsx'.")
+
+cide 6
+
+import pandas as pd
+
+# Charger le fichier Excel
+file_path = 'votre_fichier.xlsx'
+df = pd.read_excel(file_path)
+
+# Extraire les éléments uniques de la colonne ID
+unique_ids = df['ID'].unique()
+
+# Convertir en DataFrame pour enregistrer
+unique_ids_df = pd.DataFrame(unique_ids, columns=['ID'])
+
+# Enregistrer les résultats dans un nouveau fichier Excel
+unique_ids_df.to_excel('unique_ids.xlsx', index=False)
+
+print("Les éléments uniques ont été enregistrés dans 'unique_ids.xlsx'.")
