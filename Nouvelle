@@ -227,3 +227,28 @@ encours_par_client = df.groupby(['ID_client', 'Année_octroi'])['Montant_encours
 encours_par_client.to_excel('encours_par_client_et_annee.xlsx', index=False)
 
 print("Les résultats ont été enregistrés dans 'encours_par_client_et_annee.xlsx'.")
+
+
+
+
+code 1234666(67888888
+
+
+
+
+Information 
+Pan de sécurisation de la migration 
+-prioriser les élément indispensable de chaque département pour sécuriser le chantier 
+
+Nouvelles tâches
+
+-identifier les autres tâche de production en plus du chantier de migration a donné à une autre personne (Dabone) Ipou de préférence 
+-vérifier si la synchronisation est complète ou partielle ( Dabone)
+-ramenér les fichiers non utilisés sur le U pour libérer l’espace sur le S (tout le monde ) 
+
+-analyse DPI Dabone 
+-faire le point des numéros modifier dans les entrées en masse pour le soumettre à Mr Désiré 
+-faire le point avec Yan et la RPA pour les anomalies (Dosso)
+-mise en place Contrôle des nom des mère et CNI qui ne sont pas renseigner par la RPA (Dosso & Bile)
+-licence tableau 
+
