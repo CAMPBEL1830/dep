@@ -176,3 +176,31 @@ group_stats.rename(columns={'Durée_solve': 'Durée_solve_moyenne'}, inplace=Tru
 group_stats.to_excel('group_stats_with_year_and_duration.xlsx', index=False)
 
 print("Les résultats ont été enregistrés dans 'group_stats_with_year_and_duration.xlsx'.")
+
+
+
+
+
+codei 22229937373 
+
+
+
+import pandas as pd
+
+# Charger le fichier Excel
+file_path = 'votre_fichier.xlsx'
+df = pd.read_excel(file_path)
+
+# Convertir la colonne 'Taux_interet' en numérique et ignorer les valeurs non convertibles
+df['Taux_interet'] = pd.to_numeric(df['Taux_interet'], errors='coerce')
+
+# Calculer la moyenne du taux d'intérêt par catégorie
+taux_moyen = df.groupby('Catégorie')['Taux_interet'].mean().reset_index()
+
+# Renommer la colonne de moyenne
+taux_moyen.rename(columns={'Taux_interet': 'Taux_interet_moyen'}, inplace=True)
+
+# Enregistrer les résultats dans un nouveau fichier Excel
+taux_moyen.to_excel('taux_interet_moyen_par_categorie.xlsx', index=False)
+
+print("Les résultats ont été enregistrés dans 'taux_interet_moyen_par_categorie.xlsx'.")
