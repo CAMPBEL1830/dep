@@ -204,3 +204,26 @@ taux_moyen.rename(columns={'Taux_interet': 'Taux_interet_moyen'}, inplace=True)
 taux_moyen.to_excel('taux_interet_moyen_par_categorie.xlsx', index=False)
 
 print("Les résultats ont été enregistrés dans 'taux_interet_moyen_par_categorie.xlsx'.")
+
+
+
+
+code 999999999
+
+
+import pandas as pd
+
+# Charger le fichier Excel
+file_path = 'votre_fichier.xlsx'
+df = pd.read_excel(file_path)
+
+# Convertir la colonne 'Montant_encours' en numérique
+df['Montant_encours'] = pd.to_numeric(df['Montant_encours'], errors='coerce')
+
+# Calculer le montant des encours par client et année
+encours_par_client = df.groupby(['ID_client', 'Année_octroi'])['Montant_encours'].sum().reset_index()
+
+# Enregistrer les résultats dans un nouveau fichier Excel
+encours_par_client.to_excel('encours_par_client_et_annee.xlsx', index=False)
+
+print("Les résultats ont été enregistrés dans 'encours_par_client_et_annee.xlsx'.")
