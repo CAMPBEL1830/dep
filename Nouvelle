@@ -274,3 +274,39 @@ df_with_total.to_excel('montant_total_par_id.xlsx', index=False)
 
 print("Les résultats ont été enregistrés dans 'montant_total_par_id.xlsx'.")
 
+
+
+
+
+
+
+
+
+
+
+
+
+code 14862033641
+65123545
+636
+
+
+
+import pandas as pd
+
+# Charger le fichier Excel
+file_path = 'votre_fichier.xlsx'
+df = pd.read_excel(file_path)
+
+# Calculer la somme totale du montant nominal par ID et année
+montant_par_annee = df.groupby(['ID', 'Année_octroi'])['Montant_nominal_dossier'].sum().reset_index()
+
+# Renommer la colonne
+montant_par_annee.rename(columns={'Montant_nominal_dossier': 'Montant_nominal_total'}, inplace=True)
+
+# Enregistrer les résultats dans un nouveau fichier Excel
+montant_par_annee.to_excel('montant_nominal_total_par_id_et_annee.xlsx', index=False)
+
+print("Les résultats ont été enregistrés dans 'montant_nominal_total_par_id_et_annee.xlsx'.")
+
+
