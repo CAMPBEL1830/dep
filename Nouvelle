@@ -252,3 +252,25 @@ Nouvelles tâches
 -mise en place Contrôle des nom des mère et CNI qui ne sont pas renseigner par la RPA (Dosso & Bile)
 -licence tableau 
 
+
+
+code 128532012452
+
+
+import pandas as pd
+
+# Charger le fichier Excel
+file_path = 'votre_fichier.xlsx'
+df = pd.read_excel(file_path)
+
+# Calculer le montant total par ID
+total_montant = df.groupby('ID')['Montant_nominal_dossier'].sum().reset_index()
+
+# Joindre le montant total à l'ID dans le DataFrame d'origine
+df_with_total = df.merge(total_montant, on='ID', suffixes=('', '_total'))
+
+# Enregistrer les résultats dans un nouveau fichier Excel
+df_with_total.to_excel('montant_total_par_id.xlsx', index=False)
+
+print("Les résultats ont été enregistrés dans 'montant_total_par_id.xlsx'.")
+
