@@ -26,6 +26,7 @@ model.fit(X_train, y_train)
 # 3. Évaluation du Modèle
 y_pred = model.predict(X_test)
 
+
 # a. Métriques d'Évaluation
 accuracy = accuracy_score(y_test, y_pred)
 precision = precision_score(y_test, y_pred)
@@ -65,3 +66,55 @@ model = joblib.load('logistic_regression_model.pkl')
 new_data = pd.read_csv('new_data.csv')
 predictions = model.predict(new_data)
 print(predictions)
+
+
+
+
+
+
+code 2
+
+import pandas as pd
+
+# Charger le fichier Excel
+file_path = 'C:\\Users\\H10296\\Desktop\\PFEBD ULTIME.xlsx'
+
+# Charger les données à partir du fichier Excel
+data = pd.read_excel(file_path)
+
+# Afficher les noms de colonnes pour vérifier leur exactitude
+print("Colonnes du DataFrame :", data.columns)
+
+# Vérifier les dimensions du DataFrame
+print("Dimensions du DataFrame :", data.shape)
+
+# Vérifier les longueurs des colonnes d'intérêt
+columns_of_interest = [
+    'Numero dossier enfant', 
+    'Montant_encours', 
+    'Taux interet',
+    'MONTANT NOMINAL_DOSSIER', 
+    'COTATION', 
+    'ANCIENNETE AVANT PRÊT',
+    'solve durée', 
+    'Age', 
+    'Nombre d\'revenu', 
+    'Durée_pret', 
+    'MONTANT_NOMINAL_DOSSIER_ANNEE'
+]
+
+for col in columns_of_interest:
+    if col in data.columns:
+        print(f"Longueur de la colonne {col} : {len(data[col])}")
+    else:
+        print(f"Colonne {col} manquante dans le DataFrame")
+
+# Exemple de manipulation avec vérification des longueurs
+# S'assurer que toutes les colonnes d'intérêt existent et ont la même longueur
+valid_columns = [col for col in columns_of_interest if col in data.columns]
+if len(set(len(data[col]) for col in valid_columns)) == 1:
+    # Toutes les colonnes ont la même longueur
+    data_of_interest = data[valid_columns]
+    print("Les données sont prêtes pour une manipulation supplémentaire")
+else:
+    print("Certaines colonnes n'ont pas la même longueur, veuillez vérifier vos données")
