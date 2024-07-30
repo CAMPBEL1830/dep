@@ -118,3 +118,15 @@ if len(set(len(data[col]) for col in valid_columns)) == 1:
     print("Les données sont prêtes pour une manipulation supplémentaire")
 else:
     print("Certaines colonnes n'ont pas la même longueur, veuillez vérifier vos données")
+
+
+
+
+new code 
+
+# 1. Supprimer les lignes où age = 0, cotation = 0, et taux = 0
+data2_cleaned = data2[~((data2['age'] == 0) & (data2['cotation'] == 0) & (data2['taux'] == 0))]
+
+# 2. Remplacer toutes les occurrences de 'X' par 1 dans la colonne cotation
+data2_cleaned['cotation'] = data2_cleaned['cotation'].replace('X', 1)
+
