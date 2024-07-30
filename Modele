@@ -1,0 +1,67 @@
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
+import seaborn as sns
+import matplotlib.pyplot as plt
+import joblib
+
+# 1. Préparation des Données
+# a. Chargement des données
+# Remplacez 'your_data.csv' par le chemin de votre fichier de données
+data = pd.read_csv('your_data.csv')
+
+# b. Nettoyage des Données
+# Remplacez 'target' par le nom de votre colonne cible et les colonnes features par leurs noms respectifs
+X = data.drop('target', axis=1)
+y = data['target']
+
+# c. Division des Données
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# 2. Choix et Entraînement du Modèle
+model = LogisticRegression()
+model.fit(X_train, y_train)
+
+# 3. Évaluation du Modèle
+y_pred = model.predict(X_test)
+
+# a. Métriques d'Évaluation
+accuracy = accuracy_score(y_test, y_pred)
+precision = precision_score(y_test, y_pred)
+recall = recall_score(y_test, y_pred)
+f1 = f1_score(y_test, y_pred)
+
+print(f"Accuracy: {accuracy}")
+print(f"Precision: {precision}")
+print(f"Recall: {recall}")
+print(f"F1 Score: {f1}")
+
+# b. Matrice de Confusion
+cm = confusion_matrix(y_test, y_pred)
+sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
+plt.xlabel('Predicted')
+plt.ylabel('Actual')
+plt.show()
+
+# 4. Amélioration du Modèle (Facultatif)
+# a. Hyperparameter Tuning avec GridSearchCV
+from sklearn.model_selection import GridSearchCV
+
+param_grid = {'C': [0.1, 1, 10, 100]}
+grid = GridSearchCV(LogisticRegression(), param_grid, cv=5)
+grid.fit(X_train, y_train)
+print(grid.best_params_)
+
+# 5. Déploiement
+# a. Sauvegarde du Modèle
+joblib.dump(model, 'logistic_regression_model.pkl')
+
+# b. Chargement du Modèle
+model = joblib.load('logistic_regression_model.pkl')
+
+# Prédictions sur de nouvelles données
+# Remplacez 'new_data.csv' par le chemin de votre nouveau fichier de données
+new_data = pd.read_csv('new_data.csv')
+predictions = model.predict(new_data)
+print(predictions)
