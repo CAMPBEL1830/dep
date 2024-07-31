@@ -260,3 +260,46 @@ smote = SMOTE()
 # Rééchantillonnage des données d'entraînement
 X_train_resampled, y_train_resampled = smote.fit_resample(X_train, y_train)
 
+
+
+
+
+
+arbre de decision 
+
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier, plot_tree
+from sklearn.metrics import accuracy_score, classification_report
+import matplotlib.pyplot as plt
+
+# Charger vos données
+# data2 = pd.read_csv('votre_fichier.csv')  # Exemple pour charger les données depuis un fichier CSV
+
+# Préparer les données
+X = data2.drop(columns=['target'])
+y = data2['target']
+
+# Diviser les données en ensembles d'entraînement et de test
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+
+# Créer et entraîner le modèle d'arbre de décision
+model = DecisionTreeClassifier(random_state=42)
+model.fit(X_train, y_train)
+
+# Faire des prédictions
+y_pred = model.predict(X_test)
+
+# Évaluer la précision du modèle
+accuracy = accuracy_score(y_test, y_pred)
+print(f'Accuracy: {accuracy:.2f}')
+
+# Afficher un rapport de classification
+print(classification_report(y_test, y_pred))
+
+# Visualiser l'arbre de décision
+plt.figure(figsize=(20,10))
+plot_tree(model, filled=True, feature_names=X.columns, class_names=['class_0', 'class_1'])
+plt.show()
+
+
