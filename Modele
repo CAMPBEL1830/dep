@@ -161,3 +161,22 @@ print("Rapport de classification:\n", class_report)
 
 
 data3['COTATION'] = data3['COTATION'].str.replace(r'[+-]', '', regex=True)
+
+
+
+
+
+
+graphhhhhh
+
+# Compter le nombre d'éléments uniques dans la colonne
+value_counts = data['COTATION'].value_counts()
+
+# Créer le graphique de répartition
+plt.figure(figsize=(10, 6))
+sns.barplot(x=value_counts.index, y=value_counts.values, palette='viridis')
+plt.title('Répartition du nombre d\'éléments uniques dans la colonne COTATION')
+plt.xlabel('Valeurs uniques')
+plt.ylabel('Nombre d\'occurrences')
+plt.xticks(rotation=45)
+plt.show()
