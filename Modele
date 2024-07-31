@@ -175,6 +175,15 @@ value_counts = data['COTATION'].value_counts()
 # Créer le graphique de répartition
 plt.figure(figsize=(10, 6))
 sns.barplot(x=value_counts.index, y=value_counts.values, palette='viridis')
+
+
+# Ajouter des annotations pour chaque barre
+for p in bar_plot.patches:
+    bar_plot.annotate(format(p.get_height(), '.0f'), 
+                      (p.get_x() + p.get_width() / 2., p.get_height()), 
+                      ha = 'center', va = 'center', 
+                      xytext = (0, 9), 
+                      textcoords = 'offset points')
 plt.title('Répartition du nombre d\'éléments uniques dans la colonne COTATION')
 plt.xlabel('Valeurs uniques')
 plt.ylabel('Nombre d\'occurrences')
