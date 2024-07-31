@@ -130,3 +130,29 @@ data2_cleaned = data2[~((data2['age'] == 0) & (data2['cotation'] == 0) & (data2[
 # 2. Remplacer toutes les occurrences de 'X' par 1 dans la colonne cotation
 data2_cleaned['cotation'] = data2_cleaned['cotation'].replace('X', 1)
 
+
+
+bossssssssssssssssssssssssssssssssssss
+
+
+ 2. Créer une instance du modèle de régression logistique
+logistic_regression_model = LogisticRegression()
+
+# 3. Entraîner le modèle sur les données d'entraînement
+logistic_regression_model.fit(X_train, y_train)
+
+# 4. Faire des prédictions sur les données de test
+y_pred = logistic_regression_model.predict(X_test)
+
+# 5. Évaluer les performances du modèle
+# Calculer l'accuracy
+accuracy = accuracy_score(y_test, y_pred)
+print("Accuracy:", accuracy)
+
+# Matrice de confusion
+conf_matrix = confusion_matrix(y_test, y_pred)
+print("Matrice de confusion:\n", conf_matrix)
+
+# Rapport de classification
+class_report = classification_report(y_test, y_pred)
+print("Rapport de classification:\n", class_report)
