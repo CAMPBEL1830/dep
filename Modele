@@ -189,3 +189,74 @@ plt.xlabel('Valeurs uniques')
 plt.ylabel('Nombre d\'occurrences')
 plt.xticks(rotation=45)
 plt.show()
+
+
+
+
+
+
+
+
+
+amelioration 
+
+from sklearn.model_selection import GridSearchCV
+from sklearn.linear_model import LogisticRegression
+
+# Définir les paramètres à tester
+param_grid = {
+    'C': [0.01, 0.1, 1, 10, 100],  # Valeurs de régularisation
+    'penalty': ['l1', 'l2'],        # Type de régularisation
+}
+
+# Création du modèle
+logistic_regression_model = LogisticRegression(solver='liblinear')  # Utiliser 'liblinear' pour la régularisation l1
+
+# Recherche des meilleurs paramètres
+grid_search = GridSearchCV(logistic_regression_model, param_grid, cv=5)
+grid_search.fit(X_train, y_train)
+
+# Meilleur modèle et ses paramètres
+print("Meilleurs paramètres:", grid_search.best_params_)
+
+
+
+
+evaluation 
+
+
+
+from sklearn.metrics import roc_curve, auc
+
+# Prédictions de probabilité
+y_prob = logistic_regression_model.predict_proba(X_test)[:, 1]
+
+# Calcul de la courbe ROC
+fpr, tpr, _ = roc_curve(y_test, y_prob)
+roc_auc = auc(fpr, tpr)
+
+plt.figure()
+plt.plot(fpr, tpr, color='darkorange', lw=2, label='ROC curve (area = %0.2f)' % roc_auc)
+plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
+plt.xlim([0.0, 1.0])
+plt.ylim([0.0, 1.05])
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.title('Receiver Operating Characteristic')
+plt.legend(loc='lower right')
+plt.show()
+
+
+
+echantionnage 
+
+
+
+from imblearn.over_sampling import SMOTE
+
+# Création de l'objet SMOTE
+smote = SMOTE()
+
+# Rééchantillonnage des données d'entraînement
+X_train_resampled, y_train_resampled = smote.fit_resample(X_train, y_train)
+
