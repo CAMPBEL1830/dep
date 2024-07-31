@@ -340,3 +340,13 @@ print(X_train_encoded)
 print("\nTesting DataFrame after encoding:")
 print(X_test_encoded)
 
+
+
+
+
+
+
+
+
+code 1835
+
