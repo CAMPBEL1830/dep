@@ -378,3 +378,33 @@ print("Classification Report:")
 print(classification_report(y_test, y_pred))
 
 print("Accuracy Score:", accuracy_score(y_test, y_pred))
+
+
+
+
+
+
+
+
+
+
+# Calculer la log-loss
+logloss = log_loss(y_test, predictions_proba)
+
+# Calculer la précision (accuracy)
+accuracy = accuracy_score(y_test, predictions)
+
+# Calculer la précision (precision)
+precision = precision_score(y_test, predictions)
+
+# Calculer le rappel (recall)
+recall = recall_score(y_test, predictions)
+
+# Calculer le F1-score
+f1 = f1_score(y_test, predictions)
+
+print(f'Log-loss : {logloss}')
+print(f'Précision (Accuracy) : {accuracy}')
+print(f'Précision (Precision) : {precision}')
+print(f'Rappel (Recall) : {recall}')
+print(f'F1-score : {f1}')
