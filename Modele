@@ -489,7 +489,7 @@ modele.fit(X_train, y_train)
 
 
 from sklearn.model_selection import GridSearchCV
-
+  
 param_grid = {
     'C': [0.01, 0.1, 1, 10, 100],
     'penalty': ['l1', 'l2']
@@ -550,3 +550,34 @@ outliers = detect_outliers_iqr(data1)
 print("Valeurs aberrantes détectées :")
 print(outliers)
 
+
+
+
+
+import pandas as pd
+
+# Exemple de DataFrame
+# data1 = pd.DataFrame({
+#     'col1': [1, 2, 3, 4, 100, 6, 7, 8, 9, 10],
+#     'col2': [10, 11, 12, 13, 14, 15, 1000, 17, 18, 19]
+# })
+
+# Détection et suppression des valeurs aberrantes avec la méthode IQR
+def remove_outliers_iqr(df):
+    df_clean = df.copy()
+    
+    for col in df.select_dtypes(include='number').columns:
+        Q1 = df[col].quantile(0.25)
+        Q3 = df[col].quantile(0.75)
+        IQR = Q3 - Q1
+        lower_bound = Q1 - 1.5 * IQR
+        upper_bound = Q3 + 1.5 * IQR
+        
+        df_clean = df_clean[(df_clean[col] >= lower_bound) & (df_clean[col] <= upper_bound)]
+    
+    return df_clean
+
+# Appeler la fonction pour supprimer les valeurs aberrantes dans data1
+data1_clean = remove_outliers_iqr(data1)
+print("DataFrame après suppression des valeurs aberrantes :")
+print(data1_clean)
