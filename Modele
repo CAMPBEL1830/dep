@@ -408,3 +408,49 @@ print(f'Précision (Accuracy) : {accuracy}')
 print(f'Précision (Precision) : {precision}')
 print(f'Rappel (Recall) : {recall}')
 print(f'F1-score : {f1}')
+
+
+
+
+
+
+
+
+
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, log_loss, classification_report, roc_auc_score
+
+# Charger vos données
+# data2 = pd.read_csv('votre_fichier.csv')  # Exemple pour charger les données depuis un fichier CSV
+
+# Préparer les données
+X = data2.drop(columns=['target'])
+y = data2['target']
+
+# Diviser les données en ensembles d'entraînement et de test
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+
+# Créer et entraîner le modèle de régression logistique
+model = LogisticRegression(random_state=42)
+model.fit(X_train, y_train)
+
+# Faire des prédictions
+y_pred = model.predict(X_test)
+y_pred_proba = model.predict_proba(X_test)
+
+# Calculer la précision
+accuracy = accuracy_score(y_test, y_pred)
+print(f'Accuracy: {accuracy:.2f}')
+
+# Calculer le log-loss
+logloss = log_loss(y_test, y_pred_proba)
+print(f'Log-Loss: {logloss:.2f}')
+
+# Afficher un rapport de classification
+print(classification_report(y_test, y_pred))
+
+# Calculer l'AUC-ROC
+auc_roc = roc_auc_score(y_test, y_pred_proba[:, 1])
+print(f'AUC-ROC: {auc_roc:.2f}')
