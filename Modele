@@ -517,3 +517,36 @@ print(f'Moyenne des scores : {scores.mean()}')
 X_train['nouvelle_caracteristique'] = X_train['caracteristique1'] * X_train['caracteristique2']
 X_test['nouvelle_caracteristique'] = X_test['caracteristique1'] * X_test['caracteristique2']
 
+
+
+
+
+import pandas as pd
+
+# Exemple de DataFrame
+# data1 = pd.DataFrame({
+#     'col1': [1, 2, 3, 4, 100, 6, 7, 8, 9, 10],
+#     'col2': [10, 11, 12, 13, 14, 15, 1000, 17, 18, 19]
+# })
+
+# Détection des valeurs aberrantes avec la méthode IQR
+def detect_outliers_iqr(df):
+    outliers = pd.DataFrame()
+    
+    for col in df.select_dtypes(include='number').columns:
+        Q1 = df[col].quantile(0.25)
+        Q3 = df[col].quantile(0.75)
+        IQR = Q3 - Q1
+        lower_bound = Q1 - 1.5 * IQR
+        upper_bound = Q3 + 1.5 * IQR
+        
+        outlier_col = df[(df[col] < lower_bound) | (df[col] > upper_bound)]
+        outliers = outliers.append(outlier_col)
+    
+    return outliers.drop_duplicates()
+
+# Appeler la fonction pour détecter les valeurs aberrantes dans data1
+outliers = detect_outliers_iqr(data1)
+print("Valeurs aberrantes détectées :")
+print(outliers)
+
