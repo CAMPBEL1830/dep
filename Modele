@@ -581,3 +581,52 @@ def remove_outliers_iqr(df):
 data1_clean = remove_outliers_iqr(data1)
 print("DataFrame après suppression des valeurs aberrantes :")
 print(data1_clean)
+
+
+
+
+
+
+import pandas as pd
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.metrics import classification_report, roc_auc_score
+from imblearn.over_sampling import SMOTE
+
+# Chargement des données
+# data = pd.read_csv('path_to_file.csv')
+
+# Prétraitement des données
+data.fillna(data.mean(), inplace=True)
+data = pd.get_dummies(data, drop_first=True)
+
+# Séparation des variables indépendantes et dépendantes
+X = data.drop('target', axis=1)
+y = data['target']
+
+# Standardisation des données
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+# Traitement des données déséquilibrées
+smote = SMOTE()
+X_res, y_res = smote.fit_resample(X_scaled, y)
+
+# Division des données en ensembles d'entraînement et de test
+X_train, X_test, y_train, y_test = train_test_split(X_res, y_res, test_size=0.2, random_state=42)
+
+# Optimisation des hyperparamètres
+param_grid = {
+    'C': [0.1, 1, 10, 100],
+    'solver': ['lbfgs', 'liblinear']
+}
+
+grid = GridSearchCV(LogisticRegression(), param_grid, cv=5)
+grid.fit(X_train, y_train)
+
+# Évaluation du modèle
+y_pred = grid.predict(X_test)
+print(classification_report(y_test, y_pred))
+print("AUC: ", roc_auc_score(y_test, y_pred))
+print("Meilleurs paramètres: ", grid.best_params_)
