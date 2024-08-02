@@ -93,3 +93,82 @@ y_pred = grid.predict(X_test)
 print(classification_report(y_test, y_pred))
 print("AUC: ", roc_auc_score(y_test, y_pred))
 print("Meilleurs paramètres: ", grid.best_params_)
+
+
+
+
+import pandas as pd
+import numpy as np
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.metrics import classification_report, roc_auc_score
+from sklearn.utils import resample
+
+# Assumant que data4 est déjà chargé dans ton environnement
+# Exemple : data4 = pd.read_csv('path_to_file.csv')
+
+# Vérifier les valeurs NaN et les valeurs infinies
+print("Valeurs manquantes avant traitement :\n", data4.isnull().sum())
+print("Valeurs infinies avant traitement :\n", np.isinf(data4).sum())
+
+# Remplacer les valeurs NaN par la moyenne de la colonne
+data4.fillna(data4.mean(), inplace=True)
+
+# Remplacer les valeurs infinies par la valeur maximale de la colonne
+data4.replace([np.inf, -np.inf], np.nan, inplace=True)
+data4.fillna(data4.max(), inplace=True)
+
+# Vérification des valeurs extrêmes
+for col in data4.columns:
+    if data4[col].dtype == 'float64' or data4[col].dtype == 'int64':
+        print(f"Colonne {col} - Valeur maximale : {data4[col].max()}, Valeur minimale : {data4[col].min()}")
+
+# Encodage des variables catégorielles avec one-hot encoding
+data4 = pd.get_dummies(data4, drop_first=True)
+
+# Séparation des variables indépendantes et dépendantes
+X = data4.drop('Groupe', axis=1)
+y = data4['Groupe']
+
+# Standardisation des données
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+# Combinaison des données X et y pour le suréchantillonnage
+df = pd.concat([pd.DataFrame(X_scaled, columns=X.columns), y.reset_index(drop=True)], axis=1)
+
+# Séparer les classes majoritaire et minoritaire
+df_majority = df[df['Groupe'] == 0]
+df_minority = df[df['Groupe'] == 1]
+
+# Suréchantillonner la classe minoritaire
+df_minority_upsampled = resample(df_minority, 
+                                 replace=True,     # Echantillon avec remplacement
+                                 n_samples=len(df_majority),    # Pour obtenir le même nombre d'échantillons que la classe majoritaire
+                                 random_state=42)  # Pour la reproductibilité
+
+# Combiner les données majoritaires et suréchantillonnées
+df_upsampled = pd.concat([df_majority, df_minority_upsampled])
+
+# Séparation des variables indépendantes et dépendantes
+X_res = df_upsampled.drop('Groupe', axis=1)
+y_res = df_upsampled['Groupe']
+
+# Division des données en ensembles d'entraînement et de test
+X_train, X_test, y_train, y_test = train_test_split(X_res, y_res, test_size=0.2, random_state=42)
+
+# Optimisation des hyperparamètres
+param_grid = {
+    'C': [0.1, 1, 10, 100],
+    'solver': ['lbfgs', 'liblinear']
+}
+
+grid = GridSearchCV(LogisticRegression(), param_grid, cv=5)
+grid.fit(X_train, y_train)
+
+# Évaluation du modèle
+y_pred = grid.predict(X_test)
+print(classification_report(y_test, y_pred))
+print("AUC: ", roc_auc_score(y_test, y_pred))
+print("Meilleurs paramètres: ", grid.best_params_)
