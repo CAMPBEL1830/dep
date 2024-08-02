@@ -172,3 +172,24 @@ y_pred = grid.predict(X_test)
 print(classification_report(y_test, y_pred))
 print("AUC: ", roc_auc_score(y_test, y_pred))
 print("Meilleurs paramètres: ", grid.best_params_)
+
+
+
+
+
+import pandas as pd
+from sklearn.preprocessing import StandardScaler
+
+# Supposons que X_train et X_test soient vos DataFrames
+# Assurez-vous que toutes les colonnes sont de type numérique
+X_train = X_train.apply(pd.to_numeric, errors='coerce')
+X_test = X_test.apply(pd.to_numeric, errors='coerce')
+
+# Remplir les valeurs manquantes avec une valeur par défaut, par exemple la moyenne de la colonne
+X_train = X_train.fillna(X_train.mean())
+X_test = X_test.fillna(X_test.mean())
+
+# Initialiser et appliquer StandardScaler
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
