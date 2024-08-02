@@ -65,3 +65,35 @@ data_dictionary = extract_elements(file_path)
 save_to_excel(data_dictionary, excel_path)
 
 print(f"Données enregistrées dans {excel_path}")
+
+
+
+
+
+
+from sklearn.metrics import confusion_matrix, classification_report
+
+# Supposons que vous avez déjà les prédictions du modèle et les valeurs réelles
+# y_test : valeurs réelles
+# y_pred : valeurs prédites par le modèle
+
+# Calcul de la matrice de confusion
+conf_matrix = confusion_matrix(y_test, y_pred)
+
+# Extraire les valeurs de la matrice de confusion
+TN = conf_matrix[0, 0]
+FP = conf_matrix[0, 1]
+FN = conf_matrix[1, 0]
+TP = conf_matrix[1, 1]
+
+# Calculer la sensibilité (rappel)
+sensitivity = TP / (TP + FN)
+print(f'Sensibilité (rappel): {sensitivity:.2f}')
+
+# Calculer la spécificité
+specificity = TN / (TN + FP)
+print(f'Spécificité: {specificity:.2f}')
+
+# Calculer le score de classification (précision)
+classification_report_str = classification_report(y_test, y_pred)
+print("Rapport de classification:\n", classification_report_str)
