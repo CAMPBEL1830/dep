@@ -97,3 +97,40 @@ print(f'Spécificité: {specificity:.2f}')
 # Calculer le score de classification (précision)
 classification_report_str = classification_report(y_test, y_pred)
 print("Rapport de classification:\n", classification_report_str)
+
+
+
+
+
+
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.svm import SVC
+from sklearn.metrics import classification_report, accuracy_score
+
+# Charger votre DataFrame
+# data4 = pd.read_csv('votre_fichier.csv')  # Exemple si vous chargez depuis un fichier
+
+# Séparer les caractéristiques (X) et la variable cible (y)
+X = data4.drop('target_column', axis=1)  # Remplacez 'target_column' par le nom de votre colonne cible
+y = data4['target_column']
+
+# Diviser les données en ensembles d'entraînement et de test
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+
+# Standardiser les données
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
+# Créer et entraîner le modèle SVM
+model = SVC(kernel='linear')  # Vous pouvez changer le noyau (kernel) selon vos besoins
+model.fit(X_train, y_train)
+
+# Prédictions
+y_pred = model.predict(X_test)
+
+# Évaluer le modèle
+print(f"Accuracy: {accuracy_score(y_test, y_pred)}")
+print(classification_report(y_test, y_pred))
