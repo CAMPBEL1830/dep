@@ -134,3 +134,49 @@ y_pred = model.predict(X_test)
 # Évaluer le modèle
 print(f"Accuracy: {accuracy_score(y_test, y_pred)}")
 print(classification_report(y_test, y_pred))
+
+
+
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler, LabelEncoder
+from sklearn.svm import SVC
+from sklearn.metrics import classification_report, accuracy_score
+
+# Charger votre DataFrame
+# data4 = pd.read_csv('votre_fichier.csv')  # Exemple si vous chargez depuis un fichier
+
+# Identifier les colonnes non numériques
+non_numeric_cols = data4.select_dtypes(include=['object']).columns
+
+# Convertir les données catégorielles en numériques
+for column in non_numeric_cols:
+    le = LabelEncoder()
+    data4[column] = le.fit_transform(data4[column])
+
+# Gérer les valeurs manquantes
+data4.fillna(data4.median(), inplace=True)  # Remplacer les valeurs manquantes par la médiane
+
+# Séparer les caractéristiques (X) et la variable cible (y)
+X = data4.drop('target_column', axis=1)  # Remplacez 'target_column' par le nom de votre colonne cible
+y = data4['target_column']
+
+# Diviser les données en ensembles d'entraînement et de test
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+
+# Standardiser les données
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
+# Créer et entraîner le modèle SVM
+model = SVC(kernel='linear')  # Utilisez 'linear' ou essayez d'autres noyaux
+model.fit(X_train, y_train)
+
+# Prédictions
+y_pred = model.predict(X_test)
+
+# Évaluer le modèle
+print(f"Accuracy: {accuracy_score(y_test, y_pred)}")
+print(classification_report(y_test, y_pred))
+
