@@ -1,0 +1,55 @@
+import pandas as pd
+from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import classification_report, accuracy_score
+
+# Exemple avec données catégorielles
+data3 = pd.DataFrame({
+    'A': ['cat', 'dog', 'cat', 'dog', 'bird'],
+    'B': [1, 2, 3, 4, 5]
+})
+
+data1 = pd.DataFrame({
+    'C': ['high', 'low', 'medium', 'low', 'high'],
+    'D': ['yes', 'no', 'yes', 'no', 'yes']
+})
+
+data = pd.concat([data3, data1], axis=1)
+data['target'] = [0, 1, 0, 1, 0]
+
+# Séparation des données en ensembles d'entraînement et de test
+X = data.drop('target', axis=1)
+y = data['target']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Concaténer les ensembles d'entraînement et de test
+X_combined = pd.concat([X_train, X_test], keys=['train', 'test'])
+
+# Encodage one-hot des variables catégorielles
+X_combined_encoded = pd.get_dummies(X_combined)
+
+# Séparation des ensembles d'entraînement et de test après encodage
+X_train_encoded = X_combined_encoded.xs('train')
+X_test_encoded = X_combined_encoded.xs('test')
+
+# Entraînement du modèle de régression logistique
+model = LogisticRegression()
+model.fit(X_train_encoded, y_train)
+
+# Prédiction sur l'ensemble d'entraînement et de test
+y_train_pred = model.predict(X_train_encoded)
+y_test_pred = model.predict(X_test_encoded)
+
+# Évaluation du modèle
+print("Training Classification Report:")
+print(classification_report(y_train, y_train_pred))
+print("Training Accuracy Score:", accuracy_score(y_train, y_train_pred))
+
+print("\nTesting Classification Report:")
+print(classification_report(y_test, y_test_pred))
+print("Testing Accuracy Score:", accuracy_score(y_test, y_test_pred))
+
+# Validation croisée
+cv_scores = cross_val_score(model, X_train_encoded, y_train, cv=5)
+print("\nCross-validation scores:", cv_scores)
+print("Mean cross-validation score:", cv_scores.mean())
