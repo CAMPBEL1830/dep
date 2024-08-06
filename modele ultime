@@ -203,3 +203,71 @@ print(f'Log Loss: {logloss:.4f}')
 # Effectuer une validation croisée pour évaluer le surapprentissage
 cv_scores = cross_val_score(model, X, y, cv=5, scoring='neg_log_loss')
 print(f'Cross-Validated Log Loss: {-cv_scores.mean():.4f}')
+
+
+
+
+import pandas as pd
+from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.svm import SVC
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+
+# Charger les données
+data5 = pd.read_csv('chemin/vers/data5.csv')
+
+# Séparer les caractéristiques (features) et la cible (target)
+X = data5.drop('target', axis=1)  # Assurez-vous de remplacer 'target' par le nom de votre colonne cible
+y = data5['target']  # Assurez-vous de remplacer 'target' par le nom de votre colonne cible
+
+# Séparer les colonnes numériques et catégorielles
+numerical_cols = X.select_dtypes(include=['int64', 'float64']).columns
+categorical_cols = X.select_dtypes(include=['object']).columns
+
+# Convertir toutes les colonnes catégorielles en chaînes de caractères
+X[categorical_cols] = X[categorical_cols].astype(str)
+
+# Préparer les préprocesseurs pour les colonnes numériques et catégorielles
+numerical_transformer = StandardScaler()
+categorical_transformer = OneHotEncoder(handle_unknown='ignore')
+
+# Créer le transformateur en colonne
+preprocessor = ColumnTransformer(
+    transformers=[
+        ('num', numerical_transformer, numerical_cols),
+        ('cat', categorical_transformer, categorical_cols)
+    ])
+
+# Créer le pipeline avec le préprocesseur et le modèle SVM
+model = Pipeline(steps=[
+    ('preprocessor', preprocessor),
+    ('classifier', SVC(probability=True))
+])
+
+# Diviser les données en ensembles d'entraînement et de test
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Entraîner le modèle
+model.fit(X_train, y_train)
+
+# Prédire sur l'ensemble de test
+y_pred = model.predict(X_test)
+y_pred_proba = model.predict_proba(X_test)
+
+# Calculer les métriques
+accuracy = accuracy_score(y_test, y_pred)
+precision = precision_score(y_test, y_pred, average='weighted')
+recall = recall_score(y_test, y_pred, average='weighted')
+f1 = f1_score(y_test, y_pred, average='weighted')
+
+# Afficher les résultats
+print(f'Accuracy: {accuracy:.4f}')
+print(f'Precision: {precision:.4f}')
+print(f'Recall: {recall:.4f}')
+print(f'F1 Score: {f1:.4f}')
+
+# Effectuer une validation croisée pour évaluer le surapprentissage
+cv_scores = cross_val_score(model, X, y, cv=5, scoring='accuracy')
+print(f'Cross-Validated Accuracy: {cv_scores.mean():.4f}')
