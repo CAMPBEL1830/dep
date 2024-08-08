@@ -570,3 +570,78 @@ print("Meilleurs hyperparamètres : ", grid_search.best_params_)
 print("Matrice de confusion :\n", conf_matrix)
 print("Rapport de classification :\n", class_report)
 print("Log Loss : ", log_loss_value)
+
+
+
+
+
+
+
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import classification_report, confusion_matrix, log_loss
+from sklearn.preprocessing import LabelEncoder
+
+# Exemple de DataFrame
+data5 = pd.DataFrame({
+    'revenu': [1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000],
+    'age': [25, 45, 35, 50, 23, 34, 65, 45, 25, 30],
+    'groupe': ['A', 'B', 'A', 'C', 'B', 'A', 'C', 'B', 'A', 'C'],
+    'cible': [0, 1, 0, 1, 0, 1, 0, 1, 0, 1]
+})
+
+# Vérification des types de données et conversion si nécessaire
+for col in data5.columns:
+    if data5[col].dtype == 'object':
+        data5[col] = data5[col].astype(str)
+
+# Gestion des valeurs manquantes
+data5 = data5.dropna(subset=['revenu'])  # Suppression des lignes où 'revenu' est manquant
+data5['revenu'] = pd.to_numeric(data5['revenu'], errors='coerce')  # Conversion de 'revenu' en numérique
+data5 = data5.dropna(subset=['revenu'])  # Suppression des lignes où 'revenu' ne peut pas être converti en numérique
+
+# Séparation des features et de la cible
+X = data5.drop(columns=['cible'])
+y = data5['cible']
+
+# Encodage des variables catégorielles
+le = LabelEncoder()
+for col in X.select_dtypes(include=['object']).columns:
+    X[col] = le.fit_transform(X[col])
+
+# Séparation des données en ensembles d'entraînement et de test
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Définition du modèle et des hyperparamètres à rechercher
+rf = RandomForestClassifier(random_state=42)
+param_grid = {
+    'n_estimators': [50, 100, 200],
+    'max_depth': [None, 10, 20, 30],
+    'min_samples_split': [2, 5, 10],
+    'min_samples_leaf': [1, 2, 4],
+    'bootstrap': [True, False]
+}
+
+# Recherche des meilleurs hyperparamètres
+grid_search = GridSearchCV(estimator=rf, param_grid=param_grid, cv=5, scoring='neg_log_loss', n_jobs=-1)
+grid_search.fit(X_train, y_train)
+
+# Meilleur modèle
+best_rf = grid_search.best_estimator_
+
+# Prédictions
+y_pred = best_rf.predict(X_test)
+y_pred_proba = best_rf.predict_proba(X_test)
+
+# Calcul des métriques
+conf_matrix = confusion_matrix(y_test, y_pred)
+class_report = classification_report(y_test, y_pred)
+log_loss_value = log_loss(y_test, y_pred_proba)
+
+# Affichage des résultats
+print("Meilleurs hyperparamètres : ", grid_search.best_params_)
+print("Matrice de confusion :\n", conf_matrix)
+print("Rapport de classification :\n", class_report)
+print("Log Loss : ", log_loss_value)
