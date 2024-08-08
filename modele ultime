@@ -645,3 +645,73 @@ print("Meilleurs hyperparamètres : ", grid_search.best_params_)
 print("Matrice de confusion :\n", conf_matrix)
 print("Rapport de classification :\n", class_report)
 print("Log Loss : ", log_loss_value)
+
+
+
+
+
+
+
+
+
+
+
+
+import pandas as pd
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.metrics import classification_report, confusion_matrix, log_loss
+
+# Étape 1 : Préparation des données
+# Remplacez 'target_column' par le nom de votre colonne cible
+X = data5.drop('target_column', axis=1)  # Variables explicatives
+y = data5['target_column']  # Variable cible
+
+# Étape 2 : Séparation des données en ensembles d'entraînement et de test
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+
+# Étape 3 : Entraînement du modèle Random Forest
+rf_model = RandomForestClassifier(n_estimators=100, random_state=42, class_weight='balanced')
+rf_model.fit(X_train, y_train)
+
+# Étape 4 : Évaluation initiale du modèle
+y_pred = rf_model.predict(X_test)
+y_pred_proba = rf_model.predict_proba(X_test)
+
+print("Évaluation Initiale du Modèle:")
+print(classification_report(y_test, y_pred))
+print("Matrice de Confusion:")
+print(confusion_matrix(y_test, y_pred))
+print(f'Log Loss: {log_loss(y_test, y_pred_proba)}')
+
+# Étape 5 : Validation croisée et réglage des hyperparamètres
+param_grid = {
+    'n_estimators': [100, 200, 300],
+    'max_depth': [None, 10, 20, 30],
+    'min_samples_split': [2, 5, 10],
+    'min_samples_leaf': [1, 2, 4],
+    'bootstrap': [True, False]
+}
+
+grid_search = GridSearchCV(estimator=rf_model, param_grid=param_grid, cv=5, scoring='neg_log_loss', n_jobs=-1, verbose=2)
+grid_search.fit(X_train, y_train)
+
+best_model = grid_search.best_estimator_
+
+# Étape 6 : Réévaluation du modèle optimal
+y_pred_optimal = best_model.predict(X_test)
+y_pred_proba_optimal = best_model.predict_proba(X_test)
+
+print("Évaluation du Modèle Optimal:")
+print(classification_report(y_test, y_pred_optimal))
+print("Matrice de Confusion (Modèle Optimal):")
+print(confusion_matrix(y_test, y_pred_optimal))
+print(f'Log Loss Optimal: {log_loss(y_test, y_pred_proba_optimal)}')
+
+# Étape 7 : Vérification de l'overfitting
+train_pred_optimal = best_model.predict(X_train)
+train_pred_proba_optimal = best_model.predict_proba(X_train)
+
+print("Évaluation sur Ensemble d'Entraînement (pour vérifier l'overfitting):")
+print(classification_report(y_train, train_pred_optimal))
+print(f'Log Loss Entraînement: {log_loss(y_train, train_pred_proba_optimal)}')
