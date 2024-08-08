@@ -1006,3 +1006,35 @@ print("Évaluation du Modèle Optimal sur Ensemble d'Entraînement:")
 print(classification_report(y_train, train_pred_optimal))
 print(f'Log Loss Optimal sur Entraînement: {log_loss(y_train, train_pred_proba_optimal)}')
 
+
+
+
+
+
+
+import xgboost as xgb
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, classification_report
+
+# Définir X et y
+X = data9.drop(columns=['target'])  # Remplace 'target' par le nom de ta colonne cible
+y = data9['target']  # Remplace 'target' par le nom de ta colonne cible
+
+# Diviser les données en ensembles d'entraînement et de test
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Créer le modèle XGBoost
+model = xgb.XGBClassifier(use_label_encoder=False, eval_metric='logloss')
+
+# Entraîner le modèle
+model.fit(X_train, y_train)
+
+# Prédire sur l'ensemble de test
+y_pred = model.predict(X_test)
+
+# Évaluer les performances du modèle
+accuracy = accuracy_score(y_test, y_pred)
+report = classification_report(y_test, y_pred)
+
+print(f'Accuracy: {accuracy}')
+print(f'Classification Report:\n{report}')
