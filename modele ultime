@@ -899,3 +899,110 @@ train_pred_proba_optimal = best_model.predict_proba(X_train)
 print("Évaluation sur Ensemble d'Entraînement (pour vérifier l'overfitting):")
 print(classification_report(y_train, train_pred_optimal))
 print(f'Log Loss Entraînement: {log_loss(y_train, train_pred_proba_optimal)}')
+
+
+
+
+
+
+
+
+import pandas as pd
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split, GridSearchCV, cross_val_score
+from sklearn.metrics import classification_report, confusion_matrix, log_loss
+from sklearn.preprocessing import OneHotEncoder
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
+from sklearn.impute import SimpleImputer
+
+# Étape 1 : Préparation des données
+target_column = 'your_target_column'  # Changez cela avec le nom de votre colonne cible
+X = data5.drop(target_column, axis=1)  # Variables explicatives
+y = data5[target_column]  # Variable cible
+
+# Identifier les colonnes numériques et catégorielles
+num_cols = X.select_dtypes(include=['int64', 'float64']).columns
+cat_cols = X.select_dtypes(include=['object', 'category']).columns
+
+# Étape 2 : Uniformiser les colonnes
+# Convertir les colonnes mixtes en chaînes de caractères
+for col in cat_cols:
+    X[col] = X[col].astype(str)
+
+# Séparation des données en ensembles d'entraînement et de test
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+
+# Pipeline pour prétraiter les données
+preprocessor = ColumnTransformer(
+    transformers=[
+        ('num', SimpleImputer(strategy='median'), num_cols),  # Imputation des valeurs manquantes
+        ('cat', OneHotEncoder(handle_unknown='ignore'), cat_cols)
+    ])
+
+# Étape 3 : Entraînement du modèle Random Forest avec pipeline
+rf_model = Pipeline(steps=[
+    ('preprocessor', preprocessor),
+    ('classifier', RandomForestClassifier(n_estimators=100, random_state=42, class_weight='balanced'))
+])
+
+# Validation croisée
+cross_val_scores = cross_val_score(rf_model, X_train, y_train, cv=5, scoring='neg_log_loss')
+print(f'Validation Croisée Log Loss Moyenne: {-cross_val_scores.mean()}')
+
+# Entraînement du modèle sur l'ensemble d'entraînement complet
+rf_model.fit(X_train, y_train)
+
+# Étape 4 : Évaluation initiale du modèle
+# Sur l'ensemble de test
+y_pred_test = rf_model.predict(X_test)
+y_pred_proba_test = rf_model.predict_proba(X_test)
+
+print("Évaluation sur Ensemble de Test:")
+print(classification_report(y_test, y_pred_test))
+print("Matrice de Confusion sur Test:")
+print(confusion_matrix(y_test, y_pred_test))
+print(f'Log Loss sur Test: {log_loss(y_test, y_pred_proba_test)}')
+
+# Sur l'ensemble d'entraînement
+y_pred_train = rf_model.predict(X_train)
+y_pred_proba_train = rf_model.predict_proba(X_train)
+
+print("Évaluation sur Ensemble d'Entraînement:")
+print(classification_report(y_train, y_pred_train))
+print("Matrice de Confusion sur Entraînement:")
+print(confusion_matrix(y_train, y_pred_train))
+print(f'Log Loss sur Entraînement: {log_loss(y_train, y_pred_proba_train)}')
+
+# Étape 5 : Validation croisée et réglage des hyperparamètres
+param_grid = {
+    'classifier__n_estimators': [100, 200, 300],
+    'classifier__max_depth': [None, 10, 20, 30],
+    'classifier__min_samples_split': [2, 5, 10],
+    'classifier__min_samples_leaf': [1, 2, 4],
+    'classifier__bootstrap': [True, False]
+}
+
+grid_search = GridSearchCV(estimator=rf_model, param_grid=param_grid, cv=5, scoring='neg_log_loss', n_jobs=-1, verbose=2)
+grid_search.fit(X_train, y_train)
+
+best_model = grid_search.best_estimator_
+
+# Étape 6 : Réévaluation du modèle optimal
+y_pred_optimal = best_model.predict(X_test)
+y_pred_proba_optimal = best_model.predict_proba(X_test)
+
+print("Évaluation du Modèle Optimal sur Ensemble de Test:")
+print(classification_report(y_test, y_pred_optimal))
+print("Matrice de Confusion (Modèle Optimal sur Test):")
+print(confusion_matrix(y_test, y_pred_optimal))
+print(f'Log Loss Optimal sur Test: {log_loss(y_test, y_pred_proba_optimal)}')
+
+# Sur l'ensemble d'entraînement pour le modèle optimal
+train_pred_optimal = best_model.predict(X_train)
+train_pred_proba_optimal = best_model.predict_proba(X_train)
+
+print("Évaluation du Modèle Optimal sur Ensemble d'Entraînement:")
+print(classification_report(y_train, train_pred_optimal))
+print(f'Log Loss Optimal sur Entraînement: {log_loss(y_train, train_pred_proba_optimal)}')
+
