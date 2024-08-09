@@ -26,3 +26,33 @@ print(confusion_matrix(y_test, y_pred))
 
 print("Log Loss:")
 print(log_loss(y_test, y_pred_proba))
+
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report, confusion_matrix, log_loss
+
+# Charger les données
+X = data9.drop('target_column', axis=1)  # Remplacez 'target_column' par le nom de la colonne cible
+y = data9['target_column']
+
+# Diviser les données en ensembles d'entraînement et de test
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Entraîner le modèle
+model = KNeighborsClassifier()
+model.fit(X_train, y_train)
+
+# Faire des prédictions
+y_pred = model.predict(X_test)
+y_pred_proba = model.predict_proba(X_test)
+
+# Évaluer le modèle
+print("Classification Report:")
+print(classification_report(y_test, y_pred))
+
+print("Confusion Matrix:")
+print(confusion_matrix(y_test, y_pred))
+
+print("Log Loss:")
+print(log_loss(y_test, y_pred_proba))
+
