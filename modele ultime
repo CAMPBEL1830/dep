@@ -1069,3 +1069,40 @@ report = classification_report(y_test, y_pred)
 print(f'Accuracy: {accuracy}')
 print(f'Classification Report:\n{report}')
 
+
+
+
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split, GridSearchCV, cross_val_score
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+
+# Définir X et y
+X = data9.drop(columns=['target'])  # Remplace 'target' par le nom de ta colonne cible
+y = data9['target']  # Remplace 'target' par le nom de ta colonne cible
+
+# Diviser les données en ensembles d'entraînement et de test
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Créer le modèle Random Forest avec réglage des hyperparamètres
+model = RandomForestClassifier(random_state=42, n_estimators=100, max_depth=10, min_samples_split=10, min_samples_leaf=4)
+
+# Validation croisée pour vérifier les performances du modèle
+cv_scores = cross_val_score(model, X_train, y_train, cv=5, scoring='accuracy')
+print(f'Score de validation croisée: {cv_scores.mean()}')
+
+# Entraîner le modèle sur les données d'entraînement
+model.fit(X_train, y_train)
+
+# Prédire sur l'ensemble de test
+y_pred = model.predict(X_test)
+
+# Évaluer les performances du modèle
+accuracy = accuracy_score(y_test, y_pred)
+report = classification_report(y_test, y_pred)
+conf_matrix = confusion_matrix(y_test, y_pred)
+
+print(f'Accuracy: {accuracy}')
+print(f'Classification Report:\n{report}')
+print(f'Confusion Matrix:\n{conf_matrix}')
+
+
