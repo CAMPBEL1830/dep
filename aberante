@@ -17,3 +17,18 @@ for col in data.select_dtypes(include=['float64', 'int64']).columns:
 
 # Afficher le DataFrame après suppression des outliers
 print(data)
+
+
+
+columns = ['colonne1', 'colonne2', 'colonne3']  # Remplacez par vos colonnes
+
+for col in columns:
+    Q1 = data[col].quantile(0.25)
+    Q3 = data[col].quantile(0.75)
+    IQR = Q3 - Q1
+    lower_bound = Q1 - 1.5 * IQR
+    upper_bound = Q3 + 1.5 * IQR
+    data = data[(data[col] >= lower_bound) & (data[col] <= upper_bound)]
+
+# Afficher le DataFrame après suppression des outliers
+print(data)
