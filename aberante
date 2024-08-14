@@ -1,0 +1,19 @@
+import pandas as pd
+
+# Supposons que votre DataFrame s'appelle 'data'
+
+# Pour chaque colonne numérique du DataFrame
+for col in data.select_dtypes(include=['float64', 'int64']).columns:
+    Q1 = data[col].quantile(0.25)
+    Q3 = data[col].quantile(0.75)
+    IQR = Q3 - Q1
+    
+    # Définir les bornes pour détecter les outliers
+    lower_bound = Q1 - 1.5 * IQR
+    upper_bound = Q3 + 1.5 * IQR
+    
+    # Filtrer les outliers pour la colonne actuelle
+    data = data[(data[col] >= lower_bound) & (data[col] <= upper_bound)]
+
+# Afficher le DataFrame après suppression des outliers
+print(data)
