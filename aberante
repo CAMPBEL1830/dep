@@ -32,3 +32,29 @@ for col in columns:
 
 # Afficher le DataFrame après suppression des outliers
 print(data)
+
+
+
+
+
+import pandas as pd
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Extraction des coefficients et calcul de l'importance des features
+coefficients = model.coef_[0]
+feature_importances = pd.DataFrame({
+    'Feature': X.columns,
+    'Coefficient': coefficients
+})
+feature_importances['Importance'] = np.abs(feature_importances['Coefficient'])
+feature_importances = feature_importances.sort_values(by='Importance', ascending=False)
+
+# Visualisation des importances des features
+plt.figure(figsize=(10, 8))
+sns.barplot(x='Importance', y='Feature', data=feature_importances)
+plt.title('Importance des Features (Régression Logistique)')
+plt.show()
