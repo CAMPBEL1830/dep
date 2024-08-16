@@ -58,3 +58,57 @@ plt.figure(figsize=(10, 8))
 sns.barplot(x='Importance', y='Feature', data=feature_importances)
 plt.title('Importance des Features (Régression Logistique)')
 plt.show()
+
+
+
+
+
+
+
+
+
+import pandas as pd
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Supposons que votre DataFrame s'appelle 'data'
+# 'target_column' est le nom de la colonne cible (classe à prédire)
+
+# Préparation des données
+X = data.drop(columns=['target_column'])
+y = data['target_column']
+
+# Division des données en ensembles d'entraînement et de test
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Création d'un pipeline avec standardisation et régression logistique
+pipeline = Pipeline([
+    ('scaler', StandardScaler()),  # Normalisation des données
+    ('model', LogisticRegression(max_iter=1000, random_state=42))
+])
+
+# Entraînement du pipeline
+pipeline.fit(X_train, y_train)
+
+# Accéder aux coefficients du modèle de régression logistique
+model = pipeline.named_steps['model']  # Accès à l'étape du modèle dans le pipeline
+coefficients = model.coef_[0]
+
+# Extraction et tri des importances des features
+feature_importances = pd.DataFrame({
+    'Feature': X.columns,
+    'Coefficient': coefficients
+})
+feature_importances['Importance'] = np.abs(feature_importances['Coefficient'])
+feature_importances = feature_importances.sort_values(by='Importance', ascending=False)
+
+# Visualisation des importances des features
+plt.figure(figsize=(10, 8))
+sns.barplot(x='Importance', y='Feature', data=feature_importances)
+plt.title('Importance des Features (Régression Logistique)')
+plt.show()
