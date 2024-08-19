@@ -1,0 +1,26 @@
+import pandas as pd
+from sklearn.metrics import accuracy_score, classification_report
+
+# 1. Spécifiez le chemin vers le fichier Excel
+file_path = r'C:\chemin\vers\le\fichier\new_data.xlsx'  # Remplacez par le chemin réel
+
+# 2. Charger les nouvelles données à partir du fichier Excel
+new_data = pd.read_excel(file_path)
+
+# 3. Prétraiter les nouvelles données (si nécessaire, ajouter les étapes de nettoyage, encodage, normalisation, etc.)
+
+# 4. Vérifier et aligner les colonnes avec celles utilisées pour entraîner le modèle
+# Exemple: new_data = new_data[model_features] si 'model_features' est une liste des colonnes d'entraînement
+
+# 5. Soumettre les nouvelles données au modèle pour faire des prédictions
+predictions = model.predict(new_data)
+
+# 6. Si vous avez les vraies classes, évaluer les performances du modèle
+true_labels = new_data['true_labels']  # Remplacez 'true_labels' par le nom de la colonne de classes réelles
+print("Accuracy:", accuracy_score(true_labels, predictions))
+print("Classification Report:\n", classification_report(true_labels, predictions))
+
+# 7. Enregistrer les prédictions dans un nouveau fichier Excel
+output_path = r'C:\chemin\vers\le\fichier\new_data_with_predictions.xlsx'  # Chemin pour enregistrer le fichier
+new_data['predictions'] = predictions
+new_data.to_excel(output_path, index=False)
