@@ -34,3 +34,8 @@ resultat = data5.groupby('groupe')['segment'].apply(lambda x: ', '.join(x)).rese
 
 compte_segments = data5.groupby('groupe')['segment'].value_counts().unstack(fill_value=0)
 
+
+
+
+repartition = data5.groupby(['secteur_d_activite', 'groupe']).size().unstack(fill_value=0)
+repartition = data5.groupby(['agence', 'groupe']).size().unstack(fill_value=0)
