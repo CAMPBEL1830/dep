@@ -71,3 +71,11 @@ data5['groupe'] = data5['groupe'].apply(lambda x: 1 if x == 0 else 0)
 
 # Affichage du DataFrame modifié
 print(data5)
+
+
+# Supposons que data5 est ton DataFrame
+# Enregistrer data5 dans un fichier Excel
+data5.to_excel('data5_modifié.xlsx', index=False)
+
+print("Le fichier data5_modifié.xlsx a été enregistré avec succès.")
+
