@@ -1,0 +1,29 @@
+import pandas as pd
+
+# Supposons que data5 est ton DataFrame et qu'il contient les colonnes nécessaires
+
+# Calculer les moyennes pour chaque colonne en fonction du groupe
+tableau_recapitulatif = data5.groupby('groupe').agg({
+    'age': 'mean',
+    'montant_dossier': 'mean',
+    'anciennete': 'mean',
+    'duree': 'mean',
+    'taux_interet': 'mean'
+}).reset_index()
+
+# Renommer les colonnes pour plus de clarté
+tableau_recapitulatif.rename(columns={
+    'age': 'Âge Moyen',
+    'montant_dossier': 'Montant Dossier Moyen',
+    'anciennete': 'Ancienneté Moyenne',
+    'duree': 'Durée Moyenne',
+    'taux_interet': 'Taux d\'Intérêt Moyen'
+}, inplace=True)
+
+# Affichage du tableau récapitulatif
+print(tableau_recapitulatif)
+
+# Enregistrer le tableau récapitulatif dans un fichier Excel
+tableau_recapitulatif.to_excel('tableau_recapitulatif.xlsx', index=False)
+
+print("Le tableau récapitulatif a été enregistré dans le fichier tableau_recapitulatif.xlsx.")
