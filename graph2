@@ -27,3 +27,6 @@ print(tableau_recapitulatif)
 tableau_recapitulatif.to_excel('tableau_recapitulatif.xlsx', index=False)
 
 print("Le tableau récapitulatif a été enregistré dans le fichier tableau_recapitulatif.xlsx.")
+
+
+resultat = data5.groupby('groupe')['segment'].apply(lambda x: ', '.join(x)).reset_index()
