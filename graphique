@@ -61,3 +61,13 @@ plt.legend(title='Groupe', loc='upper left', bbox_to_anchor=(1, 0, 0.5, 1))
 
 # Affichage du graphique
 plt.show()
+
+
+import pandas as pd
+
+# Supposons que data5 est ton DataFrame
+# Inversion des valeurs 0 et 1 dans la colonne 'groupe'
+data5['groupe'] = data5['groupe'].apply(lambda x: 1 if x == 0 else 0)
+
+# Affichage du DataFrame modifié
+print(data5)
