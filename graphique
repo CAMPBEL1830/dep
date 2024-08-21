@@ -1,0 +1,12 @@
+import pandas as pd
+
+# Supposons que data5 est ton DataFrame et qu'il a les colonnes 'annee', 'groupe' et 'age'
+# On groupe par 'annee' et 'groupe', puis on calcule l'âge moyen
+df_age_moyen = data5.groupby(['annee', 'groupe'])['age'].mean().reset_index()
+
+# Renommer la colonne résultante pour plus de clarté
+df_age_moyen.rename(columns={'age': 'age_moyen'}, inplace=True)
+
+# Affichage du nouveau DataFrame
+print(df_age_moyen)
+
