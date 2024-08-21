@@ -30,3 +30,6 @@ print("Le tableau récapitulatif a été enregistré dans le fichier tableau_rec
 
 
 resultat = data5.groupby('groupe')['segment'].apply(lambda x: ', '.join(x)).reset_index()
+
+
+resultat = data5.groupby('groupe')['segment'].apply(lambda x: ', '.join(x)).reset_index()
