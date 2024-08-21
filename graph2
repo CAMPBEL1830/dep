@@ -39,3 +39,38 @@ compte_segments = data5.groupby('groupe')['segment'].value_counts().unstack(fill
 
 repartition = data5.groupby(['secteur_d_activite', 'groupe']).size().unstack(fill_value=0)
 repartition = data5.groupby(['agence', 'groupe']).size().unstack(fill_value=0)
+
+
+
+
+
+
+
+
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Exemple de DataFrame
+# data5 = pd.DataFrame({
+#     'agence': [...],
+#     'groupe': [...],
+#     # autres colonnes
+# })
+
+# Compte les occurrences de chaque groupe pour chaque agence
+compte_groupes = data5.groupby(['agence', 'groupe']).size().unstack(fill_value=0)
+
+# Création du graphique
+ax = compte_groupes.plot(kind='bar', stacked=False, figsize=(12, 8))
+
+# Paramétrage du graphique
+plt.title('Répartition des groupes par agence')
+plt.xlabel('Agence')
+plt.ylabel('Nombre d\'occurrences')
+plt.xticks(rotation=45, ha='right')  # Rotation des labels de l'axe des x pour plus de lisibilité
+plt.legend(title='Groupe')
+
+# Affichage du graphique
+plt.tight_layout()  # Ajuste la disposition pour éviter les chevauchements
+plt.show()
+
