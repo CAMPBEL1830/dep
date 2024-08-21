@@ -74,3 +74,8 @@ plt.legend(title='Groupe')
 plt.tight_layout()  # Ajuste la disposition pour éviter les chevauchements
 plt.show()
 
+
+
+
+data5['groupe'] = data5['groupe'].replace({1: 0, 0: 1})
+
