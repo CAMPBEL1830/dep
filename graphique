@@ -10,3 +10,26 @@ df_age_moyen.rename(columns={'age': 'age_moyen'}, inplace=True)
 # Affichage du nouveau DataFrame
 print(df_age_moyen)
 
+
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# On suppose que df_age_moyen est le DataFrame avec les colonnes 'annee', 'groupe', et 'age_moyen'
+
+# Initialisation de la figure
+plt.figure(figsize=(10, 6))
+
+# Création du barplot
+sns.barplot(x='annee', y='age_moyen', hue='groupe', data=df_age_moyen, palette='Set2')
+
+# Ajout des labels et du titre
+plt.xlabel('Année')
+plt.ylabel('Âge Moyen')
+plt.title('Âge Moyen par Année pour chaque Groupe')
+
+# Affichage de la légende
+plt.legend(title='Groupe')
+
+# Affichage du graphique
+plt.show()
