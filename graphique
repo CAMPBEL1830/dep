@@ -33,3 +33,31 @@ plt.legend(title='Groupe')
 
 # Affichage du graphique
 plt.show()
+
+
+
+
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Supposons que data5 est ton DataFrame et qu'il a les colonnes 'groupe' et 'revenu'
+# On groupe par 'groupe', puis on calcule le revenu moyen
+df_revenu_moyen = data5.groupby('groupe')['revenu'].mean().reset_index()
+
+# Affichage du DataFrame avec le revenu moyen
+print(df_revenu_moyen)
+
+# Création du diagramme circulaire
+plt.figure(figsize=(8, 8))
+
+# On crée le diagramme circulaire
+plt.pie(df_revenu_moyen['revenu'], labels=df_revenu_moyen['groupe'], autopct='%1.1f%%', colors=plt.cm.Set2.colors)
+
+# Ajout d'un titre
+plt.title('Répartition du Revenu Moyen par Groupe')
+
+# Affichage de la légende
+plt.legend(title='Groupe', loc='upper left', bbox_to_anchor=(1, 0, 0.5, 1))
+
+# Affichage du graphique
+plt.show()
