@@ -53,3 +53,73 @@ results_df = pd.DataFrame(
     columns=['Élément', 'Meilleur Match', 'Indice de Ressemblance']
 )
 results_df.to_excel('chemin/vers/ton_resultat.xlsx', index=False)
+
+
+
+
+import pandas as pd
+from difflib import SequenceMatcher
+
+# Fonction pour calculer l'indice de ressemblance
+def similarity_ratio(a, b):
+    return SequenceMatcher(None, a, b).ratio()
+
+# Fonction principale pour créer le dictionnaire des 5 meilleurs correspondances uniques
+def find_top_5_unique_matches(df, column_name):
+    # Liste des éléments uniques
+    unique_elements = df[column_name].unique().tolist()
+    
+    # Dictionnaire pour stocker les correspondances
+    match_dict = {}
+    
+    # Dictionnaire pour garder trace des meilleurs matchs déjà pris
+    taken_matches = set()
+    
+    for elem in unique_elements:
+        # Liste pour stocker les ratios et les éléments correspondants
+        match_list = []
+        
+        for compare_elem in df[column_name]:
+            if elem != compare_elem:
+                ratio = similarity_ratio(elem, compare_elem)
+                match_list.append((compare_elem, ratio))
+        
+        # Trier les correspondances par ratio décroissant
+        match_list.sort(key=lambda x: x[1], reverse=True)
+        
+        # Prendre les 5 meilleurs disponibles et uniques
+        top_5_matches = []
+        for match, ratio in match_list:
+            if len(top_5_matches) >= 5:
+                break
+            if match not in taken_matches:
+                top_5_matches.append((match, ratio))
+                taken_matches.add(match)
+        
+        # Stocker les meilleurs matchs dans le dictionnaire
+        match_dict[elem] = top_5_matches
+    
+    return match_dict
+
+# Lire le fichier Excel
+file_path = 'chemin/vers/ton_fichier.xlsx'
+df = pd.read_excel(file_path)
+
+# Nom de la colonne contenant les éléments à comparer
+column_name = 'nom_de_la_colonne'
+
+# Appliquer la fonction
+top_5_matches = find_top_5_unique_matches(df, column_name)
+
+# Affichage du résultat
+for elem, matches in top_5_matches.items():
+    print(f"{elem}: {matches}")
+
+# Optionnel : enregistrer les résultats dans un nouveau fichier Excel
+results_df = pd.DataFrame(
+    [(elem, match, ratio) for elem, matches in top_5_matches.items() for match, ratio in matches],
+    columns=['Élément', 'Meilleur Match', 'Indice de Ressemblance']
+)
+results_df.to_excel('chemin/vers/ton_resultat.xlsx', index=False)
+
+
