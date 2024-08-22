@@ -79,3 +79,8 @@ plt.show()
 
 data5['groupe'] = data5['groupe'].replace({1: 0, 0: 1})
 
+
+
+
+data5.loc[data5['groupe'] == 1, ['revenu', 'reste_a_vivre']] += 10000
+
