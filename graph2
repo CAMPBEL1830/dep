@@ -84,3 +84,46 @@ data5['groupe'] = data5['groupe'].replace({1: 0, 0: 1})
 
 data5.loc[data5['groupe'] == 1, ['revenu', 'reste_a_vivre']] += 10000
 
+
+
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Exemple de DataFrame
+# data5 = pd.DataFrame({
+#     'groupe': [0, 0, 1, 0, 1],
+#     'solve_duree': [-13, -12, -10, 0, 5],
+#     # autres colonnes
+# })
+
+# Filtrer les lignes où le groupe est égal à 0
+data_groupe_0 = data5[data5['groupe'] == 0]
+
+# Compter le nombre d'éléments dans chaque zone de solve_duree
+counts = [
+    (data_groupe_0['solve_duree'] < -12).sum(),
+    (data_groupe_0['solve_duree'] == -12).sum(),
+    (data_groupe_0['solve_duree'] > -12).sum()
+]
+
+# Libellés pour chaque zone
+labels = [
+    'Solve duree < -12',
+    'Solve duree = -12',
+    'Solve duree > -12'
+]
+
+# Créer le diagramme circulaire
+plt.figure(figsize=(8, 8))
+plt.pie(counts, labels=labels, autopct='%1.1f%%', startangle=140)
+
+# Ajouter une légende
+plt.legend(labels, title="Zones de Solve Duree", loc="upper left")
+
+# Ajouter un titre
+plt.title('Répartition des éléments du groupe 0 selon Solve Duree')
+
+# Afficher le graphique
+plt.show()
+
+
