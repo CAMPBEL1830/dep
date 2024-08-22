@@ -166,3 +166,10 @@ for element in elements_uniques:
 
 # Afficher les correspondances
 print(correspondances)
+
+
+
+
+
+
+df_correspondances.to_excel('correspondances.xlsx', index=False)
