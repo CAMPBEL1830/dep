@@ -127,3 +127,5 @@ plt.title('Répartition des éléments du groupe 0 selon Solve Duree')
 plt.show()
 
 
+# Compter le nombre de crédits par année et par groupe
+nombre_credits = data5.groupby(['année', 'groupe']).size().unstack(fill_value=0)
