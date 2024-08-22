@@ -1,5 +1,9 @@
+# Calcul du total des occurrences pour chaque agence
+totaux = compte_groupes.sum(axis=1)
+
 # Ordonner les agences selon le total des occurrences
 compte_groupes = compte_groupes.loc[totaux.sort_values(ascending=False).index]
+
 
 
 
