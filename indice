@@ -332,3 +332,64 @@ output_file = 'similarity_results_difflib.xlsx'
 save_to_excel(similarity_dict, output_file)
 
 print(f"Les résultats ont été enregistrés dans {output_file}.")
+
+
+
+
+
+import pandas as pd
+import difflib
+
+def create_similarity_dict(df, column_name):
+    # Extraction des éléments uniques
+    unique_elements = df[column_name].unique()
+    
+    # Initialisation du dictionnaire final
+    similarity_dict = {}
+
+    # Parcourir chaque élément unique pour calculer les indices de ressemblance
+    for unique_elem in unique_elements:
+        # Calculer les indices de ressemblance avec tous les éléments de la colonne
+        matches = difflib.get_close_matches(unique_elem, df[column_name], n=len(df), cutoff=0)
+        
+        # Créer une liste de tuples (match, score) pour chaque match
+        match_scores = [(match, difflib.SequenceMatcher(None, unique_elem, match).ratio() * 100) for match in matches]
+
+        # Trier les matches par score, enlever les doublons de noms, et récupérer les 5 meilleurs
+        matches_sorted = sorted(set(match_scores), key=lambda x: x[1], reverse=True)
+        best_matches = [f"{match[0]} ({match[1]:.2f})" for match in matches_sorted if match[0] != unique_elem][:5]
+
+        # Ajouter au dictionnaire
+        similarity_dict[unique_elem] = best_matches
+
+    return similarity_dict
+
+def save_to_excel_flat(similarity_dict, output_file):
+    # Initialisation d'une liste pour créer le DataFrame final
+    rows = []
+
+    # Construction du DataFrame avec chaque tiers unique répété pour chaque match
+    for unique_elem, best_matches in similarity_dict.items():
+        for match in best_matches:
+            rows.append([unique_elem, match])
+
+    # Conversion en DataFrame
+    columns = ["Tiers Unique", "Match"]
+    result_df = pd.DataFrame(rows, columns=columns)
+
+    # Sauvegarde dans un fichier Excel
+    result_df.to_excel(output_file, index=False)
+
+# Exemple d'utilisation
+df = pd.read_excel('votre_fichier.xlsx')
+column_name = 'nom_de_la_colonne'
+
+# Créer le dictionnaire de similarités
+similarity_dict = create_similarity_dict(df, column_name)
+
+# Sauvegarder le résultat dans un fichier Excel avec chaque tiers unique répété pour chaque match
+output_file = 'flat_similarity_results.xlsx'
+save_to_excel_flat(similarity_dict, output_file)
+
+print(f"Les résultats ont été enregistrés dans {output_file}.")
+
