@@ -217,3 +217,60 @@ df_correspondances.to_excel('correspondances.xlsx', index=False)
 
 print("Le fichier 'correspondances.xlsx' a été créé avec succès.")
 
+
+
+
+
+
+import pandas as pd
+from fuzzywuzzy import process
+
+def create_similarity_dict(df, column_name):
+    # Extraction des éléments uniques
+    unique_elements = df[column_name].unique()
+    
+    # Initialisation du dictionnaire final
+    similarity_dict = {}
+
+    # Parcourir chaque élément unique pour calculer les indices de ressemblance
+    for unique_elem in unique_elements:
+        # Calculer les indices de ressemblance avec tous les éléments de la colonne
+        matches = process.extract(unique_elem, df[column_name], limit=len(df))
+        
+        # Trier les matches par score, enlever les doublons de noms, et récupérer les 5 meilleurs
+        matches = sorted(set(matches), key=lambda x: x[1], reverse=True)
+        best_matches = [match for match in matches if match[0] != unique_elem][:5]
+
+        # Ajouter au dictionnaire
+        similarity_dict[unique_elem] = best_matches
+
+    return similarity_dict
+
+def save_to_excel(similarity_dict, output_file):
+    # Initialisation d'une liste pour créer le DataFrame final
+    rows = []
+
+    # Construction du DataFrame à partir du dictionnaire
+    for unique_elem, best_matches in similarity_dict.items():
+        row = [unique_elem] + [f"{match[0]} ({match[1]})" for match in best_matches]
+        rows.append(row)
+
+    # Conversion en DataFrame
+    columns = ["Element Unique"] + [f"Match {i+1}" for i in range(5)]
+    result_df = pd.DataFrame(rows, columns=columns)
+
+    # Sauvegarde dans un fichier Excel
+    result_df.to_excel(output_file, index=False)
+
+# Exemple d'utilisation
+df = pd.read_excel('votre_fichier.xlsx')
+column_name = 'nom_de_la_colonne'
+
+# Créer le dictionnaire de similarités
+similarity_dict = create_similarity_dict(df, column_name)
+
+# Sauvegarder le résultat dans un fichier Excel
+output_file = 'similarity_results.xlsx'
+save_to_excel(similarity_dict, output_file)
+
+print(f"Les résultats ont été enregistrés dans {output_file}.")
