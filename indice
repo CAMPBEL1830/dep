@@ -172,4 +172,48 @@ print(correspondances)
 
 
 
+import pandas as pd
+from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.feature_extraction.text import CountVectorizer
+
+# Charger le fichier Excel
+df = pd.read_excel('ton_fichier.xlsx')
+
+# Spécifier la colonne à traiter
+colonne = df['nom_de_la_colonne']
+
+# Extraire les éléments uniques
+elements_uniques = colonne.unique().tolist()
+
+# Initialiser un dictionnaire pour stocker les correspondances
+correspondances = {}
+
+# Fonction pour calculer la similarité Cosine entre deux éléments textuels
+def calculer_similarite(element1, element2):
+    vect = CountVectorizer().fit_transform([element1, element2])
+    sim = cosine_similarity(vect)
+    return sim[0][1]
+
+# Comparer chaque élément unique avec tous les autres éléments
+for element in elements_uniques:
+    meilleurs_scores = {}
+    for autre_element in colonne:
+        if element != autre_element:
+            score = calculer_similarite(element, autre_element)
+            meilleurs_scores[autre_element] = score
+    
+    # Trouver l'élément avec le meilleur score de ressemblance
+    meilleur_correspondant = max(meilleurs_scores, key=meilleurs_scores.get)
+    
+    # Assigner l'élément correspondant à l'élément unique
+    if meilleur_correspondant not in correspondances.values():
+        correspondances[element] = meilleur_correspondant
+
+# Convertir le dictionnaire en DataFrame
+df_correspondances = pd.DataFrame(list(correspondances.items()), columns=['Tiers Unique', 'Meilleur Correspondant'])
+
+# Enregistrer le DataFrame dans un fichier Excel
 df_correspondances.to_excel('correspondances.xlsx', index=False)
+
+print("Le fichier 'correspondances.xlsx' a été créé avec succès.")
+
