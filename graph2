@@ -138,3 +138,12 @@ plt.show()
 
 # Compter le nombre de crédits par année et par groupe
 nombre_credits = data5.groupby(['année', 'groupe']).size().unstack(fill_value=0)
+
+
+
+
+# Créer data_test avec les lignes où l'année d'octroi est 2022
+data_test = data5[data5['année_d_octroi'] == 2022]
+
+# Mettre à jour data5 avec le reste des lignes (année d'octroi différente de 2022)
+data5 = data5[data5['année_d_octroi'] != 2022]
