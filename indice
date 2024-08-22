@@ -1,3 +1,9 @@
+# Ordonner les agences selon le total des occurrences
+compte_groupes = compte_groupes.loc[totaux.sort_values(ascending=False).index]
+
+
+
+
 import pandas as pd
 from difflib import SequenceMatcher
 
